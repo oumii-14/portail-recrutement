@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mes offres</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f0f0f0; }
+        .btn { padding: 6px 12px; background: #007bff; color: white; text-decoration: none; border-radius: 6px; display: inline-block; margin: 2px; }
+        .btn-danger { background: #dc3545; }
+        .btn-success { background: #28a745; }
+        .btn-back { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📢 Mes offres</h2>
+        
+        <div style="margin-bottom:15px;">
+            <a href="/creer-offre/" class="btn btn-success">+ Creer une offre</a>
+        </div>
+        
+        {% if offres %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Lieu</th>
+                    <th>Date</th>
+                    <th>Candidatures</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offre in offres %}
+                <tr>
+                    <td>{{ offre.titre }}</td>
+                    <td>{{ offre.lieu }}</td>
+                    <td>{{ offre.datePublication|date:"d/m/Y" }}</td>
+                    <td>{{ offre.candidatures.count }}</td>
+                    <td>
+                        <a href="/modifier-offre/{{ offre.id }}/" class="btn">Modifier</a>
+                        <a href="/supprimer-offre/{{ offre.id }}/" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Aucune offre publiée pour le moment.</p>
+        {% endif %}
+        
+        <a href="/dashboard/" class="btn-back">⬅ Retour au dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mes messages</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        .conv { padding: 12px; border-bottom: 1px solid #ddd; }
+        .conv a { text-decoration: none; color: #333; display: block; }
+        .btn { background: #28a745; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+        .btn:hover { background: #218838; }
+        .success-msg { background: #d4edda; color: #155724; padding: 10px; border-radius: 6px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💬 Messages</h2>
+        
+        {% if messages %}
+            <div class="success-msg">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <a href="{% url 'envoyer_message' %}" class="btn">✏️ Nouveau message</a>
+        
+        <h3>Conversations</h3>
+        {% for user in conversations %}
+            <div class="conv">
+                <a href="{% url 'conversation' user.id %}">
+                    🗣️ {{ user.prenom }} {{ user.nom }} ({{ user.email }})
+                </a>
+            </div>
+        {% empty %}
+            <p>Aucune conversation pour le moment.</p>
+        {% endfor %}
+        
+        <br><a href="{% url 'dashboard' %}">⬅ Retour</a>
+    </div>
+</body>
+</html>

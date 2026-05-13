@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inscription - Portail Recrutement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #F0F2F5;
+            min-height: 100vh;
+        }
+        
+        /* Barre de navigation */
+        .navbar {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1E3A8A;
+            text-decoration: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4B5563;
+            margin-left: 25px;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: #2563EB;
+        }
+        
+        /* Conteneur principal */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 150px);
+            padding: 40px;
+        }
+        
+        /* Carte d'inscription */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            width: 500px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .card h2 {
+            color: #1F2937;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .card-subtitle {
+            color: #6B7280;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #374151;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.3s;
+        }
+        
+        .btn:hover {
+            background: #1E3A8A;
+        }
+        
+        .link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+        
+        .link a {
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .link a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer p {
+            color: #9CA3AF;
+            font-size: 12px;
+        }
+        
+        .error-message {
+            background: #FEF2F2;
+            color: #DC2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+   <div class="navbar">
+    <a href="/" class="logo">Portail Recrutement</a>
+    <div class="nav-links">
+        <a href="/">Accueil</a>
+        <a href="/connexion/">Connexion</a>
+        <a href="/inscription/">Inscription</a>
+    </div>
+</div>
+    
+    <!-- Contenu -->
+    <div class="container">
+        <div class="card">
+            <h2>Inscription</h2>
+            <p class="card-subtitle">Créez votre compte gratuitement</p>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <label>Nom</label>
+                <input type="text" name="nom" placeholder="Votre nom" required>
+                
+                <label>Prénom</label>
+                <input type="text" name="prenom" placeholder="Votre prénom" required>
+                
+                <label>Email</label>
+                <input type="email" name="email" placeholder="exemple@email.com" autocomplete="off" required>
+                
+                <label>Mot de passe</label>
+                <input type="password" name="password" placeholder="Minimum 6 caractères" required>
+                
+                <label>Je suis</label>
+                <select name="role" required>
+                    <option value="candidat">Candidat</option>
+                    <option value="recruteur">Recruteur / RH</option>
+                </select>
+                
+                <button type="submit" class="btn">S'inscrire</button>
+            </form>
+            
+            <div class="link">
+                Déjà un compte ? <a href="/login/">Se connecter</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2026 Portail Recrutement - Tous droits réservés (oumi basma)</p>
+    </div>
+</body>
+</html>

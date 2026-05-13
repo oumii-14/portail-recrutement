@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mes candidatures</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f0f0f0; }
+        .status-en_attente { color: #ffc107; font-weight: bold; }
+        .status-acceptee { color: #28a745; font-weight: bold; }
+        .status-rejetee { color: #dc3545; font-weight: bold; }
+        .status-entretien { color: #17a2b8; font-weight: bold; }
+        a { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📋 Mes candidatures</h2>
+        
+        {% if candidatures %}
+        <table>
+            <thead>
+                <tr><th>Offre</th><th>Date</th><th>Statut</th></tr>
+            </thead>
+            <tbody>
+                {% for c in candidatures %}
+                <tr>
+                    <td>{{ c.offre.titre }}</td>
+                    <td>{{ c.datePostulation|date:"d/m/Y" }}</td>
+                    <td class="status-{{ c.statut.nom }}">{{ c.statut.nom }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Vous n'avez pas encore postulé.</p>
+        {% endif %}
+        
+        <a href="/dashboard/">⬅ Retour au dashboard</a>
+    </div>
+</body>
+</html>

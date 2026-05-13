@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Candidatures reçues</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f0f0f0; }
+        .btn { padding: 5px 10px; border-radius: 4px; text-decoration: none; color: white; display: inline-block; margin: 2px; font-size: 12px; }
+        .btn-accept { background: #28a745; }
+        .btn-reject { background: #dc3545; }
+        .btn-warning { background: #ffc107; color: #333; }
+        .btn-info { background: #17a2b8; }
+        .filter-form { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .filter-form select, .filter-form button { padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; }
+        .filter-form button { background: #007bff; color: white; border: none; cursor: pointer; }
+        .status-en_attente { color: #ffc107; font-weight: bold; }
+        .status-acceptee { color: #28a745; font-weight: bold; }
+        .status-rejetee { color: #dc3545; font-weight: bold; }
+        .status-entretien { color: #17a2b8; font-weight: bold; }
+        .text-muted { color: #999; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📄 Candidatures reçues</h2>
+
+        <!-- FILTRES -->
+        <div class="filter-form">
+            <form method="get" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <select name="statut">
+                    <option value="">Tous les statuts</option>
+                    {% for s in statuts %}
+                        <option value="{{ s.nom }}" {% if statut_filter == s.nom %}selected{% endif %}>{{ s.nom }}</option>
+                    {% endfor %}
+                </select>
+                <select name="ville">
+                    <option value="">Toutes les villes</option>
+                    {% for v in villes %}
+                        <option value="{{ v }}" {% if ville_filter == v %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Filtrer</button>
+                <a href="?">Réinitialiser</a>
+            </form>
+        </div>
+
+        {% if candidatures %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidat</th>
+                    <th>Offre</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in candidatures %}
+                <tr>
+                    <td>{{ c.candidat.utilisateur.prenom }} {{ c.candidat.utilisateur.nom }}</td>
+                    <td>{{ c.offre.titre }}</td>
+                    <td>{{ c.datePostulation|date:"d/m/Y" }}</td>
+                    <td class="status-{{ c.statut.nom }}">{{ c.statut.nom }}</td>
+                    <td>
+                        <a href="{% url 'accepter_candidature' c.id %}" class="btn btn-accept">Accepter</a>
+                        <a href="{% url 'rejeter_candidature' c.id %}" class="btn btn-reject">Rejeter</a>
+                        <a href="{% url 'planifier_entretien' c.id %}" class="btn btn-warning">Entretien</a>
+
+                        {% with doc=c.candidat.documents.first %}
+                            {% if doc and doc.fichier %}
+                                <a href="{{ doc.fichier.url }}" target="_blank" class="btn btn-info">📄 Voir CV</a>
+                            {% else %}
+                                <span class="text-muted">Pas de CV</span>
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Aucune candidature reçue pour le moment.</p>
+        {% endif %}
+
+        <br>
+        <a href="/dashboard/">⬅ Retour au dashboard</a>
+    </div>
+</body>
+</html>

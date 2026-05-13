@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Entretiens</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f0f0f0; }
+        .btn-back { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📅 Entretiens planifiés</h2>
+        
+        {% if entretiens %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidat</th>
+                    <th>Offre</th>
+                    <th>Date</th>
+                    <th>Heure</th>
+                    <th>Lieu</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in entretiens %}
+                <tr>
+                    <td>{{ e.candidature.candidat.utilisateur.prenom }} {{ e.candidature.candidat.utilisateur.nom }}</td>
+                    <td>{{ e.candidature.offre.titre }}</td>
+                    <td>{{ e.date|date:"d/m/Y" }}</td>
+                    <td>{{ e.heure }}</td>
+                    <td>{{ e.lieu }}</td>
+                    <td>{{ e.type }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Aucun entretien planifié pour le moment.</p>
+        {% endif %}
+        
+        <a href="/dashboard/" class="btn-back">⬅ Retour au dashboard</a>
+    </div>
+</body>
+</html>

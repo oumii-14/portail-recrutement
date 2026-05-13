@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Offres d'emploi</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        .offre-card { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .offre-card h3 { margin: 0 0 10px 0; }
+        .btn { display: inline-block; padding: 6px 12px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; margin-top: 10px; }
+        .btn-back { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; }
+        .search-form { margin-bottom: 20px; display: flex; gap: 10px; }
+        .search-form input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .search-form button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .search-form button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📢 Offres d'emploi</h2>
+        
+        <!-- BARRE DE RECHERCHE -->
+        <div class="search-form">
+            <form method="get" style="display: flex; gap: 10px; width: 100%;">
+                <input type="text" name="q" placeholder="Rechercher par titre ou lieu..." value="{{ query }}">
+                <button type="submit">🔍 Rechercher</button>
+                {% if query %}
+                    <a href="?" style="padding: 10px; color: #dc3545; text-decoration: none;">✖ Effacer</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        {% if offres %}
+            {% for offre in offres %}
+            <div class="offre-card">
+                <h3>{{ offre.titre }}</h3>
+                <p><strong>Lieu :</strong> {{ offre.lieu }}</p>
+                <p>{{ offre.description|truncatewords:20 }}</p>
+                <p><small>Publiée le {{ offre.datePublication|date:"d/m/Y" }}</small></p>
+                <a href="/postuler/{{ offre.id }}/" class="btn">Postuler</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucune offre disponible pour le moment.</p>
+        {% endif %}
+        
+        <a href="/dashboard/" class="btn-back">⬅ Retour au dashboard</a>
+    </div>
+</body>
+</html>

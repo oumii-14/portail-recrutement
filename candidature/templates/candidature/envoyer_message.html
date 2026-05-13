@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Envoyer un message</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        select, textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>✏️ Nouveau message</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label>Destinataire</label>
+            <select name="destinataire" required>
+                <option value="">-- Choisir --</option>
+                {% for u in utilisateurs %}
+                    <option value="{{ u.id }}">{{ u.prenom }} {{ u.nom }} ({{ u.role }})</option>
+                {% endfor %}
+            </select>
+            
+            <label>Message</label>
+            <textarea name="contenu" rows="5" placeholder="Votre message..." required></textarea>
+            
+            <button type="submit">Envoyer</button>
+        </form>
+        <br><a href="{% url 'messages_liste' %}">⬅ Retour</a>
+    </div>
+</body>
+</html>

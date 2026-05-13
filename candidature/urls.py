@@ -1,0 +1,30 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.accueil, name='accueil'),
+    path('inscription/', views.inscription, name='inscription'),
+    path('login/', views.connexion, name='connexion'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('deconnexion/', views.deconnexion, name='deconnexion'),
+    path('creer-offre/', views.creer_offre, name='creer_offre'),
+    path('offres/', views.liste_offres, name='liste_offres'),
+    path('mes-offres/', views.mes_offres, name='mes_offres'),
+    path('mes-candidatures/', views.mes_candidatures, name='mes_candidatures'),
+    path('notifications/', views.mes_notifications, name='mes_notifications'),
+    path('modifier-offre/<int:offre_id>/', views.modifier_offre, name='modifier_offre'),
+    path('supprimer-offre/<int:offre_id>/', views.supprimer_offre, name='supprimer_offre'),
+    path('postuler/<int:offre_id>/', views.postuler, name='postuler'),
+    path('candidatures-recues/', views.candidatures_recues, name='candidatures_recues'),
+    path('accepter/<int:candidature_id>/', views.accepter_candidature, name='accepter_candidature'),
+    path('rejeter/<int:candidature_id>/', views.rejeter_candidature, name='rejeter_candidature'),
+    path('planifier-entretien/<int:candidature_id>/', views.planifier_entretien, name='planifier_entretien'),
+    path('messages/', views.messages_liste, name='messages_liste'),
+    path('envoyer-message/', views.envoyer_message, name='envoyer_message'),
+    path('conversation/<int:utilisateur_id>/', views.conversation, name='conversation'),
+    path('entretiens/', views.entretiens_liste, name='entretiens_liste'),
+    path('profil/', views.mon_profil, name='mon_profil'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('oulay-offre-ideale/', views.oulay_offre_ideale, name='oulay_offre_ideale'),
+    path('oulay-aide-offre/', views.oulay_aide_offre, name='oulay_aide_offre'),
+]

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OULAY - Rédiger une offre</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+        button { margin-top: 20px; background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        .btn-back { display: inline-block; margin-top: 20px; color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>✍️ OULAY – Aide à la rédaction d’offre</h2>
+        <p>Remplis ces 3 champs, OULAY génère une description d’offre pour toi.</p>
+        <form method="post">
+            {% csrf_token %}
+            <label>1. Intitulé du poste</label>
+            <input type="text" name="titre" placeholder="Ex: Développeur Django" required>
+
+            <label>2. Secteur d’activité</label>
+            <input type="text" name="secteur" placeholder="Ex: IT, Finance, Marketing..." required>
+
+            <label>3. Lieu</label>
+            <input type="text" name="lieu" placeholder="Ex: Paris, Rabat, Casablanca..." required>
+
+            <button type="submit">🚀 Générer mon offre</button>
+        </form>
+        <br>
+        <a href="/dashboard/" class="btn-back">⬅ Retour au dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Postuler</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 { margin-top: 0; color: #333; }
+        .offre-info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .offre-info h3 { margin: 0 0 10px 0; }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            margin-top: 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Postuler à une offre</h2>
+        
+        <div class="offre-info">
+            <h3>{{ offre.titre }}</h3>
+            <p><strong>Lieu :</strong> {{ offre.lieu }}</p>
+            <p>{{ offre.description|truncatewords:30 }}</p>
+        </div>
+        
+        {% if erreur %}
+            <div class="error">{{ erreur }}</div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>Votre CV (PDF, DOC, DOCX)</label>
+            <input type="file" name="cv" accept=".pdf,.doc,.docx" required>
+            
+            <button type="submit">Envoyer ma candidature</button>
+        </form>
+        
+        <a href="/offres/">⬅ Retour aux offres</a>
+    </div>
+</body>
+</html>

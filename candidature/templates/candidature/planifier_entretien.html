@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Planifier un entretien</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        h2 { margin-top: 0; color: #333; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+        button { margin-top: 20px; background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #218838; }
+        .info { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .info p { margin: 5px 0; }
+        a { display: inline-block; margin-top: 15px; color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📅 Planifier un entretien</h2>
+        
+        <div class="info">
+            <p><strong>Candidat :</strong> {{ candidature.candidat.utilisateur.prenom }} {{ candidature.candidat.utilisateur.nom }}</p>
+            <p><strong>Offre :</strong> {{ candidature.offre.titre }}</p>
+            <p><strong>Email candidat :</strong> {{ candidature.candidat.utilisateur.email }}</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <label>📅 Date</label>
+            <input type="date" name="date" required>
+            
+            <label>⏰ Heure</label>
+            <input type="time" name="heure" required>
+            
+            <label>📍 Lieu</label>
+            <input type="text" name="lieu" placeholder="Ex: Visio, Bureau 12, Teams..." required>
+            
+            <label>🎥 Type d'entretien</label>
+            <select name="type" required>
+                <option value="physique">Physique</option>
+                <option value="visio">Visio</option>
+                <option value="telephone">Téléphone</option>
+            </select>
+            
+            <button type="submit">✅ Planifier l'entretien</button>
+        </form>
+        
+        <br>
+        <a href="{% url 'candidatures_recues' %}">⬅ Retour aux candidatures</a>
+    </div>
+</body>
+</html>

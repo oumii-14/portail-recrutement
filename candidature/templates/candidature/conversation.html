@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conversation</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
+        .message { padding: 10px; margin: 10px 0; border-radius: 8px; }
+        .moi { background: #007bff; color: white; text-align: right; }
+        .autre { background: #e9ecef; text-align: left; }
+        .date { font-size: 11px; margin-top: 5px; opacity: 0.7; }
+        textarea { width: 100%; padding: 10px; margin-top: 20px; border-radius: 6px; }
+        button { background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💬 Discussion avec {{ autre.prenom }} {{ autre.nom }}</h2>
+        
+        {% for msg in messages %}
+            <div class="message {% if msg.expediteur == user %}moi{% else %}autre{% endif %}">
+                <strong>{% if msg.expediteur == user %}Moi{% else %}{{ autre.prenom }}{% endif %}</strong>
+                <p>{{ msg.contenu }}</p>
+                <div class="date">{{ msg.dateEnvoi|date:"d/m/Y H:i" }}</div>
+            </div>
+        {% empty %}
+            <p>Aucun message échangé.</p>
+        {% endfor %}
+        
+        <form method="post" action="{% url 'envoyer_message' %}">
+            {% csrf_token %}
+            <textarea name="contenu" rows="3" placeholder="Votre réponse..." required></textarea>
+            <input type="hidden" name="destinataire" value="{{ autre.id }}">
+            <button type="submit">Répondre</button>
+        </form>
+        
+        <br><a href="{% url 'messages_liste' %}">⬅ Retour</a>
+    </div>
+</body>
+</html>
