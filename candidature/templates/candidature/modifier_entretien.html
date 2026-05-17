@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier l'entretien – OBMI Recrutement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F5F5F7; color: #1A1A1A; }
+        .header { background: #FFFFFF; border-bottom: 1px solid #EAEAEA; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .logo { font-size: 20px; font-weight: 800; }
+        .logo .blue { background: linear-gradient(135deg, #0A2540, #1E3A5F); -webkit-background-clip: text; background-clip: text; color: #1E3A5F; }
+        .logo .light { color: #5F6F82; font-weight: 500; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #4A4A4A; font-size: 14px; font-weight: 500; transition: 0.2s; }
+        .nav-links a:hover { color: #1E3A5F; }
+        .container { max-width: 700px; margin: 0 auto; padding: 32px 40px; }
+        .form-card { background: #FFFFFF; border-radius: 24px; border: 1px solid #EAEAEA; overflow: hidden; }
+        .form-header { background: linear-gradient(135deg, #1E3A5F 0%, #0A2540 100%); padding: 28px; text-align: center; color: white; }
+        .form-header i { font-size: 40px; margin-bottom: 12px; }
+        .form-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+        .form-header p { font-size: 13px; opacity: 0.9; }
+        .form-body { padding: 28px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #333; }
+        label i { margin-right: 8px; color: #1E3A5F; }
+        input, select { width: 100%; padding: 12px 16px; border: 1px solid #EAEAEA; border-radius: 12px; font-size: 14px; transition: 0.2s; }
+        input:focus, select:focus { outline: none; border-color: #1E3A5F; }
+        .info-candidat { background: #FAFAFA; padding: 16px; border-radius: 12px; margin-bottom: 24px; }
+        .info-candidat p { margin: 8px 0; font-size: 13px; }
+        .btn-submit { background: #1E3A5F; color: white; border: none; padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-submit:hover { background: #0A2540; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #1E3A5F; text-decoration: none; margin-top: 20px; }
+        @media (max-width: 768px) {
+            .header { padding: 16px 20px; flex-direction: column; align-items: flex-start; }
+            .container { padding: 20px; }
+            .form-body { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo"><span class="blue">OBMI</span><span class="light">Recrutement</span></div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="/dashboard/">Dashboard</a>
+            <a href="/deconnexion/" style="background:#FEF2F2; padding:6px 16px; border-radius:40px;">Déconnexion</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <i class="fas fa-calendar-edit"></i>
+                <h1>Modifier l'entretien</h1>
+                <p>Mettez à jour les informations de l'entretien</p>
+            </div>
+            <div class="form-body">
+                <div class="info-candidat">
+                    <p><strong><i class="fas fa-user"></i> Candidat :</strong> {{ entretien.candidature.candidat.utilisateur.prenom }} {{ entretien.candidature.candidat.utilisateur.nom }}</p>
+                    <p><strong><i class="fas fa-briefcase"></i> Offre :</strong> {{ entretien.candidature.offre.titre }}</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date</label>
+                        <input type="date" name="date" value="{{ entretien.date|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Heure</label>
+                        <input type="time" name="heure" value="{{ entretien.heure }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Lieu</label>
+                        <input type="text" name="lieu" value="{{ entretien.lieu }}" placeholder="Ex: Visio, Bureau 12, Teams..." required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-video"></i> Type</label>
+                        <select name="type" required>
+                            <option value="physique" {% if entretien.type == 'physique' %}selected{% endif %}>🏢 Physique</option>
+                            <option value="visio" {% if entretien.type == 'visio' %}selected{% endif %}>🎥 Visio</option>
+                            <option value="telephone" {% if entretien.type == 'telephone' %}selected{% endif %}>📞 Téléphone</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Enregistrer les modifications</button>
+                </form>
+            </div>
+        </div>
+        <a href="{% url 'entretiens' %}" class="back-link"><i class="fas fa-arrow-left"></i> Retour aux entretiens</a>
+    </div>
+</body>
+</html>

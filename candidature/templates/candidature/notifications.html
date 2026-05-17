@@ -1,34 +1,400 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Mes notifications</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes notifications – OBMI Recrutement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
-        .notification { padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid; }
-        .info { background: #e3f2fd; border-left-color: #2196f3; }
-        .success { background: #e8f5e9; border-left-color: #4caf50; }
-        .error { background: #ffebee; border-left-color: #f44336; }
-        .date { font-size: 12px; color: #999; margin-top: 5px; }
-        a { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F7;
+            color: #1A1A1A;
+        }
+
+        /* HEADER */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #EAEAEA;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .logo .blue {
+            background: linear-gradient(135deg, #0A2540, #1E3A5F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #1E3A5F;
+        }
+
+        .logo .light {
+            color: #5F6F82;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A4A4A;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1E3A5F;
+        }
+
+        .nav-links .btn-logout {
+            background: #FEF2F2;
+            border: 1px solid #FEE2E2;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #DC2626;
+        }
+
+        .nav-links .btn-logout:hover {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 40px;
+        }
+
+        /* PAGE HEADER */
+        .page-header {
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        .page-header p {
+            color: #666666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* STATS CARD */
+        .stats-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #EAEAEA;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .stats-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stats-info i {
+            font-size: 28px;
+            color: #1E3A5F;
+        }
+
+        .stats-info .stats-text {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .stats-info .stats-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        .mark-read-btn {
+            background: #F5F5F5;
+            border: 1px solid #EAEAEA;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1E3A5F;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mark-read-btn:hover {
+            background: #EFF6FF;
+            border-color: #BFDBFE;
+        }
+
+        /* NOTIFICATIONS LIST */
+        .notifications-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #EAEAEA;
+            overflow: hidden;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px 24px;
+            border-bottom: 1px solid #EAEAEA;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #FAFAFA;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .notification-icon.success {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .notification-icon.error {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .notification-date {
+            font-size: 11px;
+            color: #888888;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notification-badge {
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            background: #1E3A5F;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #CCCCCC;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            color: #666666;
+        }
+
+        /* BACK LINK */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #1E3A5F;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            margin-top: 24px;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .container {
+                padding: 24px 20px;
+            }
+            .stats-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .notification-item {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .notification-icon {
+                width: 36px;
+                height: 36px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>🔔 Mes notifications</h2>
-        
-        {% if notifications %}
-            {% for notif in notifications %}
-                <div class="notification {{ notif.type }}">
-                    <p>{{ notif.contenu }}</p>
-                    <div class="date">{{ notif.dateEnvoi|date:"d/m/Y H:i" }}</div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>Aucune notification.</p>
-        {% endif %}
-        
-        <a href="/dashboard/">⬅ Retour</a>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <span class="blue">OBMI</span><span class="light">Recrutement</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="/dashboard/">Dashboard</a>
+            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
+        </div>
     </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>🔔 Mes notifications</h1>
+                <p>Restez informé des actualités importantes</p>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-card">
+            <div class="stats-info">
+                <i class="fas fa-bell"></i>
+                <div>
+                    <div class="stats-number">{{ notifications|length }}</div>
+                    <div class="stats-text">notification(s)</div>
+                </div>
+            </div>
+            <a href="#" class="mark-read-btn" id="markAllRead">
+                <i class="fas fa-check-double"></i> Tout marquer comme lu
+            </a>
+        </div>
+
+        <!-- NOTIFICATIONS LIST -->
+        <div class="notifications-card">
+            {% if notifications %}
+                {% for notif in notifications %}
+                    <div class="notification-item" data-id="{{ notif.id }}">
+                        <div class="notification-icon {{ notif.type }}">
+                            {% if notif.type == 'info' %}
+                                <i class="fas fa-info-circle"></i>
+                            {% elif notif.type == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif notif.type == 'error' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% else %}
+                                <i class="fas fa-bell"></i>
+                            {% endif %}
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-message">{{ notif.contenu }}</div>
+                            <div class="notification-date">
+                                <i class="far fa-clock"></i>
+                                {{ notif.dateEnvoi|date:"d/m/Y à H:i" }}
+                            </div>
+                        </div>
+                        {% if not notif.lu %}
+                            <div class="notification-badge"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-bell-slash"></i>
+                    <p>Aucune notification pour le moment.</p>
+                    <p style="font-size: 13px; margin-top: 8px;">Les notifications apparaîtront ici lorsque vous aurez des activités.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- BACK LINK -->
+        <a href="/dashboard/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Retour au dashboard
+        </a>
+    </div>
+
+    <script>
+        // Marquer toutes les notifications comme lues
+        document.getElementById('markAllRead')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch('/notifications/marquer-tout-lu/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planifier un entretien – OBMI Recrutement</title>
+    <title>ALEX – Offre idéale | OBMI Recrutement</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -97,59 +97,32 @@
             overflow: hidden;
         }
 
-        /* CANDIDAT INFO */
-        .candidat-info {
-            background: #FAFAFA;
-            padding: 24px;
-            border-bottom: 1px solid #EAEAEA;
+        .form-header {
+            background: linear-gradient(135deg, #1E3A5F 0%, #0A2540 100%);
+            padding: 32px;
+            text-align: center;
+            color: white;
         }
 
-        .candidat-info h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111111;
+        .form-header i {
+            font-size: 48px;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .candidat-info h2 i {
-            color: #1E3A5F;
+        .form-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
-        .info-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid #EAEAEA;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-row i {
-            width: 24px;
-            color: #1E3A5F;
-            font-size: 16px;
-        }
-
-        .info-row .label {
-            font-weight: 600;
-            color: #555555;
-            width: 100px;
-        }
-
-        .info-row .value {
-            color: #111111;
-            font-weight: 500;
+        .form-header p {
+            font-size: 14px;
+            opacity: 0.9;
         }
 
         /* FORM BODY */
         .form-body {
-            padding: 28px;
+            padding: 32px;
         }
 
         .form-group {
@@ -167,6 +140,7 @@
         label i {
             margin-right: 8px;
             color: #1E3A5F;
+            width: 24px;
         }
 
         input, select {
@@ -186,14 +160,13 @@
             box-shadow: 0 0 0 3px rgba(30,58,95,0.1);
         }
 
-        /* HINT TEXT */
-        .form-hint {
+        .help-text {
             font-size: 12px;
             color: #888888;
             margin-top: 6px;
         }
 
-        /* BUTTONS */
+        /* BUTTON */
         .btn-submit {
             background: #1E3A5F;
             color: white;
@@ -244,15 +217,13 @@
                 padding: 24px 20px;
             }
             .form-body {
-                padding: 20px;
+                padding: 24px;
             }
-            .info-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
+            .form-header {
+                padding: 24px;
             }
-            .info-row .label {
-                width: auto;
+            .form-header h1 {
+                font-size: 24px;
             }
         }
     </style>
@@ -273,71 +244,49 @@
 
     <div class="container">
         <div class="form-card">
-            <!-- CANDIDAT INFO -->
-            <div class="candidat-info">
-                <h2>
-                    <i class="fas fa-calendar-plus"></i>
-                    Planifier un entretien
-                </h2>
-                <div class="info-row">
-                    <i class="fas fa-user-circle"></i>
-                    <span class="label">Candidat :</span>
-                    <span class="value">{{ candidature.candidat.utilisateur.prenom }} {{ candidature.candidat.utilisateur.nom }}</span>
-                </div>
-                <div class="info-row">
-                    <i class="fas fa-briefcase"></i>
-                    <span class="label">Offre :</span>
-                    <span class="value">{{ candidature.offre.titre }}</span>
-                </div>
-                <div class="info-row">
-                    <i class="fas fa-envelope"></i>
-                    <span class="label">Email :</span>
-                    <span class="value">{{ candidature.candidat.utilisateur.email }}</span>
-                </div>
+            <div class="form-header">
+               
+                <h1>🧠 ALEX – Trouve ton offre idéale</h1>
+                <p>Réponds à ces 3 questions, ALEX te recommande la meilleure offre</p>
             </div>
 
-            <!-- FORM BODY -->
             <div class="form-body">
                 <form method="post">
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <label><i class="fas fa-calendar-alt"></i> Date de l'entretien</label>
-                        <input type="date" name="date" required>
-                        <div class="form-hint">Choisissez une date pour l'entretien</div>
+                        <label><i class="fas fa-briefcase"></i> Quel type de poste recherches-tu ?</label>
+                        <input type="text" name="poste" placeholder="Ex: Développeur, Data Analyst, DevOps..." required>
+                        <div class="help-text">Exemple : Développeur Django, Data Analyst, Chef de projet...</div>
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fas fa-clock"></i> Heure</label>
-                        <input type="time" name="heure" required>
-                        <div class="form-hint">Format : HH:MM (ex: 14:30)</div>
+                        <label><i class="fas fa-map-marker-alt"></i> Dans quelle ville ?</label>
+                        <input type="text" name="ville" placeholder="Ex: Paris, Rabat, Casablanca, Remote..." required>
+                        <div class="help-text">Précisez la ville ou "Remote" pour télétravail</div>
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fas fa-map-marker-alt"></i> Lieu / Lien</label>
-                        <input type="text" name="lieu" placeholder="Ex: Visio (lien Zoom), Bureau 12, Salle A..." required>
-                        <div class="form-hint">Lieu physique ou lien visio</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label><i class="fas fa-video"></i> Type d'entretien</label>
-                        <select name="type" required>
-                            <option value="physique">🏢 Physique (sur site)</option>
-                            <option value="visio">🎥 Visio (Zoom, Teams, Meet)</option>
-                            <option value="telephone">📞 Téléphone</option>
+                        <label><i class="fas fa-file-signature"></i> Quel type de contrat ?</label>
+                        <select name="contrat" required>
+                            <option value="">-- Sélectionnez un contrat --</option>
+                            <option value="CDI">📄 CDI - Contrat à Durée Indéterminée</option>
+                            <option value="CDD">📋 CDD - Contrat à Durée Déterminée</option>
+                            <option value="Stage">🎓 Stage</option>
+                            <option value="Alternance">🔄 Alternance</option>
                         </select>
                     </div>
 
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-check-circle"></i> Planifier l'entretien
+                        <i class="fas fa-magic"></i> Trouver mon offre idéale
                     </button>
                 </form>
             </div>
         </div>
 
         <!-- BACK LINK -->
-        <a href="{% url 'candidatures_recues' %}" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour aux candidatures
+        <a href="/dashboard/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Retour au dashboard
         </a>
     </div>
 

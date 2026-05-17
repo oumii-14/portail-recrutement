@@ -1,44 +1,349 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Mes candidatures</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes candidatures – OBMI Recrutement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 40px; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f0f0f0; }
-        .status-en_attente { color: #ffc107; font-weight: bold; }
-        .status-acceptee { color: #28a745; font-weight: bold; }
-        .status-rejetee { color: #dc3545; font-weight: bold; }
-        .status-entretien { color: #17a2b8; font-weight: bold; }
-        a { display: inline-block; margin-top: 20px; color: #007bff; text-decoration: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F7;
+            color: #1A1A1A;
+        }
+
+        /* HEADER */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #EAEAEA;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .logo .blue {
+            background: linear-gradient(135deg, #0A2540, #1E3A5F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #1E3A5F;
+        }
+
+        .logo .light {
+            color: #5F6F82;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A4A4A;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1E3A5F;
+        }
+
+        .nav-links .btn-logout {
+            background: #FEF2F2;
+            border: 1px solid #FEE2E2;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #DC2626;
+        }
+
+        .nav-links .btn-logout:hover {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 40px;
+        }
+
+        /* PAGE HEADER */
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666666;
+            font-size: 14px;
+        }
+
+        /* TABLE */
+        .table-container {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #EAEAEA;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px 20px;
+            background: #FAFAFA;
+            font-size: 12px;
+            font-weight: 600;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: #333333;
+            border-bottom: 1px solid #EAEAEA;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #FAFAFA;
+        }
+
+        /* STATUS STYLES */
+        .status-en_attente {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-acceptee {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .status-rejetee {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .status-entretien {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        /* OFFRE TITLE */
+        .offre-title {
+            font-weight: 600;
+            color: #111111;
+        }
+
+        .offre-detail {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 4px;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #EAEAEA;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #CCCCCC;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .empty-state a {
+            background: #1E3A5F;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        .empty-state a:hover {
+            background: #0A2540;
+        }
+
+        /* BACK LINK */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #1E3A5F;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            margin-top: 24px;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .container {
+                padding: 24px 20px;
+            }
+            th, td {
+                padding: 12px 16px;
+            }
+            td {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>📋 Mes candidatures</h2>
-        
-        {% if candidatures %}
-        <table>
-            <thead>
-                <tr><th>Offre</th><th>Date</th><th>Statut</th></tr>
-            </thead>
-            <tbody>
-                {% for c in candidatures %}
-                <tr>
-                    <td>{{ c.offre.titre }}</td>
-                    <td>{{ c.datePostulation|date:"d/m/Y" }}</td>
-                    <td class="status-{{ c.statut.nom }}">{{ c.statut.nom }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-            <p>Vous n'avez pas encore postulé.</p>
-        {% endif %}
-        
-        <a href="/dashboard/">⬅ Retour au dashboard</a>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <span class="blue">OBMI</span><span class="light">Recrutement</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="/dashboard/">Dashboard</a>
+            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
+        </div>
     </div>
+
+    <div class="container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1>📋 Mes candidatures</h1>
+            <p>Suivez l'évolution de vos candidatures</p>
+        </div>
+
+        <!-- TABLEAU DES CANDIDATURES -->
+        {% if candidatures %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Offre</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in candidatures %}
+                    <tr>
+                        <td>
+                            <div class="offre-title">{{ c.offre.titre }}</div>
+                            <div class="offre-detail">{{ c.offre.type_contrat }} • {{ c.offre.lieu }}</div>
+                        </td>
+                        <td>{{ c.datePostulation|date:"d/m/Y" }}</td>
+                        <td>
+                            <span class="status-{{ c.statut.nom }}">
+                                {% if c.statut.nom == 'en_attente' %}
+                                    ⏳ En attente
+                                {% elif c.statut.nom == 'acceptee' %}
+                                    ✅ Acceptée
+                                {% elif c.statut.nom == 'rejetee' %}
+                                    ❌ Rejetée
+                                {% elif c.statut.nom == 'entretien' %}
+                                    📅 Entretien
+                                {% else %}
+                                    {{ c.statut.nom }}
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Vous n'avez pas encore postulé à une offre.</p>
+            <a href="/offres/">📢 Explorer les offres</a>
+        </div>
+        {% endif %}
+
+        <!-- BACK LINK -->
+        <a href="/dashboard/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Retour au dashboard
+        </a>
+    </div>
+
 </body>
 </html>

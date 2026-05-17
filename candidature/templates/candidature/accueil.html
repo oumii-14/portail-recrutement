@@ -1,218 +1,737 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Portail Recrutement</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBMI Recrutement – Offres d'emploi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scroll-behavior: smooth;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #F0F2F5;
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            color: #1E293B;
+            line-height: 1.5;
         }
-        
-        /* ========== BARRE DE NAVIGATION EN HAUT ========== */
+
         .navbar {
             background: white;
-            padding: 15px 40px;
+            border-bottom: 1px solid #E9EEF2;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        
+
         .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #1E3A8A;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        
+
+        .logo h1 {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0A2540, #2C5F8A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        .btn-admin-small {
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            padding: 5px 16px;
+            border-radius: 40px;
+            color: #1E40AF;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-admin-small:hover {
+            background: #DBEAFE;
+            border-color: #93C5FD;
+        }
+
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 24px;
             align-items: center;
+            flex-wrap: wrap;
         }
-        
+
         .nav-links a {
             text-decoration: none;
-            color: #4B5563;
+            color: #334155;
             font-weight: 500;
-            transition: 0.3s;
+            transition: color 0.2s;
         }
-        
+
         .nav-links a:hover {
-            color: #2563EB;
+            color: #0A66C2;
         }
-        
-        .btn-login {
-            background: white;
-            border: 2px solid #2563EB;
-            color: #2563EB !important;
-            padding: 8px 20px;
-            border-radius: 8px;
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1E293B;
         }
-        
-        .btn-login:hover {
-            background: #2563EB;
-            color: white !important;
-        }
-        
-        .btn-register {
-            background: #2563EB;
-            color: white !important;
-            padding: 8px 20px;
-            border-radius: 8px;
-        }
-        
-        .btn-register:hover {
-            background: #1E3A8A;
-        }
-        
-        /* ========== CONTENU PRINCIPAL ========== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 40px;
-        }
-        
-        .welcome-card {
-            background: white;
-            border-radius: 16px;
-            padding: 50px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid #e0e0e0;
-        }
-        
-        .welcome-card h1 {
-            font-size: 36px;
-            color: #1F2937;
-            margin-bottom: 15px;
-        }
-        
-        .welcome-card p {
-            font-size: 18px;
-            color: #6B7280;
-            margin-bottom: 30px;
-        }
-        
-        .welcome-card .btn {
+
+        .btn-outline, .btn-primary {
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #1E40AF;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
             display: inline-block;
-            padding: 12px 30px;
-            margin: 0 10px;
-            border-radius: 8px;
+            text-align: center;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover, .btn-primary:hover {
+            background: #DBEAFE;
+            border-color: #93C5FD;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 48px;
+            max-width: 1280px;
+            margin: 40px auto 0;
+            padding: 60px 32px;
+            background: linear-gradient(135deg, #EEF2FF 0%, #FFFFFF 70%);
+            border-radius: 48px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-content h2 {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0A2540, #2C5F8A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin: 24px 0 32px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 48px;
+            border: 1px solid #CBD5E1;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-bar button {
+            background: #0A66C2;
+            border: none;
+            padding: 0 28px;
+            border-radius: 48px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 16px;
+        }
+
+        .stat-item .number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0A2540;
+        }
+
+        .stat-item .label {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+        }
+
+        .values {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin: 80px auto;
+            flex-wrap: wrap;
+        }
+
+        .value-card {
+            text-align: center;
+            max-width: 260px;
+            padding: 24px;
+            border-radius: 24px;
+            transition: all 0.2s;
+            background: #F8FAFC;
+        }
+
+        .value-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+        }
+
+        .value-card i {
+            font-size: 40px;
+            color: #2563EB;
+            margin-bottom: 16px;
+        }
+
+        .value-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .value-card p {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .articles-section {
+            max-width: 1280px;
+            margin: 60px auto;
+            padding: 0 32px;
+        }
+
+        .articles-title {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 48px;
+            color: #0A2540;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .article-card {
+            background: #F8FAFC;
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #E9EEF2;
+        }
+
+        .article-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+            border-color: #2563EB;
+        }
+
+        .article-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0A2540;
+            margin-bottom: 12px;
+        }
+
+        .article-card p {
+            font-size: 14px;
+            color: #64748B;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .article-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563EB;
             text-decoration: none;
             font-weight: 600;
-            transition: 0.3s;
+            font-size: 14px;
+            transition: gap 0.2s;
         }
-        
-        .btn-primary {
-            background: #2563EB;
-            color: white;
+
+        .article-link:hover {
+            gap: 12px;
         }
-        
-        .btn-primary:hover {
-            background: #1E3A8A;
+
+        .testimonials {
+            max-width: 1280px;
+            margin: 60px auto;
+            padding: 0 32px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 20px;
         }
-        
-        .btn-secondary {
-            background: white;
-            color: #2563EB;
-            border: 2px solid #2563EB;
-        }
-        
-        .btn-secondary:hover {
-            background: #2563EB;
-            color: white;
-        }
-        
-        /* Features */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        
-        .feature {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
+
+        .testimonials-title {
+            font-size: 28px;
+            font-weight: 600;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            margin-bottom: 48px;
+            color: #0A2540;
         }
-        
-        .feature h3 {
-            color: #1F2937;
-            margin-bottom: 10px;
+
+        .testimonials-grid {
+            display: flex;
+            gap: 32px;
+            flex-wrap: nowrap;
+            width: max-content;
         }
-        
-        .feature p {
-            color: #6B7280;
+
+        .testimonial-card {
+            scroll-snap-align: start;
+            width: 320px;
+            flex-shrink: 0;
+            background: #F8FAFC;
+            border-radius: 24px;
+            padding: 28px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+
+        .testimonial-avatar {
+            width: 64px;
+            height: 64px;
+            background: #2563EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #334155;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: #0A2540;
+        }
+
+        .testimonial-title {
+            font-size: 13px;
+            color: #64748B;
+        }
+
+        .offres-section {
+            max-width: 1280px;
+            margin: 60px auto;
+            padding: 0 32px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: #0A2540;
+            text-align: center;
+        }
+
+        .offres-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .offre-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid #E9EEF2;
+            transition: all 0.25s;
+            position: relative;
+        }
+
+        .offre-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.08);
+            border-color: #2563EB;
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #E0F2FE;
+            color: #0369A1;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 30px;
+            z-index: 2;
+        }
+
+        .offre-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-right: 80px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+
+        .badge-cdi { background: #DCFCE7; color: #166534; }
+        .badge-cdd { background: #FEF3C7; color: #92400E; }
+        .badge-stage { background: #DBEAFE; color: #1E40AF; }
+        .badge-alternance { background: #F3E8FF; color: #6B21A5; }
+
+        .offre-lieu, .offre-date {
+            font-size: 13px;
+            color: #5C6B7A;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .offre-description {
+            font-size: 14px;
+            color: #475569;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .btn-postuler {
+            display: inline-block;
+            margin-top: 16px;
+            background: transparent;
+            color: #2563EB;
+            padding: 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-postuler:hover {
+            color: #1D4ED8;
+        }
+
+        .faq-section {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 0 32px;
+            scroll-margin-top: 80px;
+        }
+
+        .faq-title {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 48px;
+            color: #0A2540;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #E9EEF2;
+            margin-bottom: 24px;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .faq-question i {
+            transition: transform 0.2s;
+            color: #2563EB;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: #64748B;
+            line-height: 1.6;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            padding-bottom: 20px;
+        }
+
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .footer {
+            background: #0F172A;
+            color: #94A3B8;
+            padding: 48px 32px 24px;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 48px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #94A3B8;
+            text-decoration: none;
+            margin-bottom: 12px;
             font-size: 14px;
         }
-        
-        /* Footer */
-        .footer {
-            background: white;
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 50px;
+
+        .footer-col a:hover {
+            color: white;
         }
-        
-        .footer p {
-            color: #9CA3AF;
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 32px;
+            margin-top: 32px;
+            border-top: 1px solid #1E293B;
             font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; text-align: center; padding: 40px 24px; }
+            .hero-content h2 { font-size: 32px; }
+            .hero-stats { justify-content: center; }
+            .values { gap: 24px; }
+            .offres-grid, .articles-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; width: 100%; flex-direction: column; align-items: flex-start; }
+            .nav-links.show { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .testimonials { padding: 0 16px; }
+            .testimonial-card { width: 280px; }
+            .logo { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
-    <!-- BARRE DE NAVIGATION EN HAUT -->
-    <div class="navbar">
-        <div class="logo">Portail Recrutement</div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/login/" class="btn-login">Connexion</a>
-            <a href="/inscription/" class="btn-register">Inscription</a>
-        </div>
-    </div>
-    
-    <!-- CONTENU PRINCIPAL -->
-    <div class="container">
-        <div class="welcome-card">
-            <h1>Bienvenue sur Portail Recrutement</h1>
-            <p>La plateforme qui connecte les talents aux entreprises</p>
+
+<div class="navbar">
+    <div class="nav-container">
+        <div class="logo">
             <div>
-                <a href="/login/" class="btn btn-primary">Se connecter</a>
-                <a href="/inscription/" class="btn btn-secondary">S'inscrire</a>
+                <h1>OBMI RECRUTEMENT</h1>
+                <p>Talents & opportunités</p>
             </div>
+           <a href="/admin-login/" class="btn-admin-small">Administration</a>
         </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>1000+ offres</h3>
-                <p>Des opportunités dans tous les secteurs</p>
-            </div>
-            <div class="feature">
-                <h3>500+ entreprises</h3>
-                <p>Les meilleurs recruteurs vous attendent</p>
-            </div>
-            <div class="feature">
-                <h3>Suivi en temps réel</h3>
-                <p>Suivez l'évolution de vos candidatures</p>
-            </div>
+        <button class="mobile-menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+        <div class="nav-links" id="navLinks">
+            <a href="#faq">FAQ</a>
+            <a href="#blog">Conseils</a>
+            <a href="#offres">Offres</a>
+            <a href="#avis">Avis</a>
+            <a href="/">Accueil</a>
+            {% if user.is_authenticated %}
+                <a href="/dashboard/">Dashboard</a>
+                <a href="/deconnexion/">Déconnexion</a>
+            {% else %}
+                <a href="/login/" class="btn-outline">Connexion</a>
+                <a href="/inscription/" class="btn-primary">Inscription</a>
+            {% endif %}
         </div>
     </div>
-    
-    <!-- FOOTER -->
-    <div class="footer">
-        <p>&copy; 2026 Portail Recrutement - Tous droits réservés</p>
+</div>
+
+<div class="hero">
+    <div class="hero-content">
+        <h2>Votre carrière commence ici</h2>
+        <p>Rejoignez les meilleures entreprises et donnez un nouvel élan à votre avenir professionnel. Que vous soyez junior ou senior, en CDI, CDD, stage ou alternance, notre plateforme vous accompagne à chaque étape. Bénéficiez d'un suivi personnalisé, d'offres vérifiées et d'un processus de candidature simplifié pour accélérer votre recherche d'emploi.</p>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Mots-clés (ex: Développeur, Paris)">
+            <button id="searchBtn">Rechercher</button>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item"><div class="number">1 200+</div><div class="label">offres</div></div>
+            <div class="stat-item"><div class="number">580+</div><div class="label">entreprises</div></div>
+            <div class="stat-item"><div class="number">95%</div><div class="label">satisfaction</div></div>
+        </div>
     </div>
+    <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Équipe professionnelle">
+    </div>
+</div>
+
+<div class="values">
+    <div class="value-card"><i class="fas fa-bolt"></i><h3>Rapidité</h3><p>Processus simplifié</p></div>
+    <div class="value-card"><i class="fas fa-shield-alt"></i><h3>Confiance</h3><p>Offres vérifiées</p></div>
+    <div class="value-card"><i class="fas fa-chart-line"></i><h3>Évolution</h3><p>Suivi personnalisé</p></div>
+</div>
+
+<div id="avis" class="testimonials">
+    <h2 class="testimonials-title">Avis</h2>
+    <div class="testimonials-grid">
+        <div class="testimonial-card"><div class="testimonial-avatar"><i class="fas fa-user-circle"></i></div><div class="testimonial-text">“Grâce à OBMI Recrutement, j’ai trouvé un poste de développeur en moins de deux semaines. Plateforme intuitive et réactive !”</div><div class="testimonial-name">Sophie L.</div><div class="testimonial-title">Développeuse full stack</div></div>
+        <div class="testimonial-card"><div class="testimonial-avatar"><i class="fas fa-user-tie"></i></div><div class="testimonial-text">“Nous avons recruté notre alternant en 48h. Les candidats sont de qualité et le process est fluide.”</div><div class="testimonial-name">Karim B.</div><div class="testimonial-title">Responsable RH, ABC Technologie</div></div>
+        <div class="testimonial-card"><div class="testimonial-avatar"><i class="fas fa-user-graduate"></i></div><div class="testimonial-text">“Je recommande vivement ! J’ai postulé à 3 offres et j’ai été rappelée sous 24h.”</div><div class="testimonial-name">Camille D.</div><div class="testimonial-title">Data Analyst</div></div>
+        <div class="testimonial-card"><div class="testimonial-avatar"><i class="fas fa-user-md"></i></div><div class="testimonial-text">“Un gain de temps considérable. Les notifications et le suivi des candidatures sont parfaits.”</div><div class="testimonial-name">Dr. Nadia F.</div><div class="testimonial-title">Directrice des soins</div></div>
+    </div>
+</div>
+
+<div id="offres" class="offres-section">
+    <h2 class="section-title">Offres récentes</h2>
+    <div class="offres-grid">
+        {% for offre in offres|slice:":6" %}
+        <div class="offre-card">
+            {% if forloop.first %}<span class="new-badge">Nouvelle</span>{% endif %}
+            <div class="offre-title">
+                {{ offre.titre }}
+                {% if offre.type_contrat == 'CDI' %}<span class="badge badge-cdi">CDI</span>{% endif %}
+                {% if offre.type_contrat == 'CDD' %}<span class="badge badge-cdd">CDD</span>{% endif %}
+                {% if offre.type_contrat == 'Stage' %}<span class="badge badge-stage">Stage</span>{% endif %}
+                {% if offre.type_contrat == 'Alternance' %}<span class="badge badge-alternance">Alternance</span>{% endif %}
+            </div>
+            <div class="offre-lieu"><i class="fas fa-map-marker-alt"></i> {{ offre.lieu }}</div>
+            <div class="offre-date"><i class="far fa-calendar-alt"></i> Publiée le {{ offre.datePublication|date:"d/m/Y" }}</div>
+            {% if offre.date_expiration %}<div class="offre-date"><i class="far fa-hourglass"></i> Expire le {{ offre.date_expiration|date:"d/m/Y" }}</div>{% endif %}
+            <div class="offre-description">{{ offre.description|truncatewords:16 }}</div>
+            <a href="{% url 'connexion' %}" class="btn-postuler">Postuler <i class="fas fa-arrow-right"></i></a>
+        </div>
+        {% empty %}<p>Aucune offre disponible pour le moment.</p>{% endfor %}
+    </div>
+</div>
+
+<div id="blog" class="articles-section">
+    <h2 class="articles-title">Conseils & Actualités</h2>
+    <div class="articles-grid">
+        <div class="article-card">
+            <h3>5 conseils pour réussir votre CV</h3>
+            <p>Astuces pour faire la différence auprès des recruteurs.</p>
+            <a href="{% url 'blog_cv_conseils' %}" class="article-link">Lire l'article →</a>
+        </div>
+        <div class="article-card">
+            <h3>Préparez votre entretien</h3>
+            <p>Questions fréquentes et clés du succès.</p>
+            <a href="{% url 'blog_preparer_entretien' %}" class="article-link">Lire l'article →</a>
+        </div>
+        <div class="article-card">
+            <h3>Tendances du marché en 2026</h3>
+            <p>Secteurs qui recrutent et compétences valorisées.</p>
+            <a href="{% url 'blog_tendances_2026' %}" class="article-link">Lire l'article →</a>
+        </div>
+    </div>
+</div>
+
+<div id="faq" class="faq-section">
+    <h2 class="faq-title">FAQ</h2>
+    <div class="faq-item"><div class="faq-question">Comment créer un compte candidat ?<i class="fas fa-chevron-down"></i></div><div class="faq-answer">Cliquez sur "Inscription", choisissez "Candidat", remplissez vos informations. Une fois inscrit, vous pourrez postuler.</div></div>
+    <div class="faq-item"><div class="faq-question">Comment publier une offre en tant que recruteur ?<i class="fas fa-chevron-down"></i></div><div class="faq-answer">Inscrivez-vous comme "Recruteur", connectez-vous, puis dans "Mes offres" cliquez sur "+ Créer une offre".</div></div>
+    <div class="faq-item"><div class="faq-question">Comment suivre l'état de ma candidature ?<i class="fas fa-chevron-down"></i></div><div class="faq-answer">Connectez-vous et allez dans "Mes candidatures". Le statut est mis à jour automatiquement.</div></div>
+</div>
+
+<div class="footer">
+    <div class="footer-container">
+        <div class="footer-col"><h4>OBMI Recrutement</h4><a href="#">À propos</a><a href="#">Contact</a><a href="#">Mentions légales</a></div>
+        <div class="footer-col"><h4>Candidats</h4><a href="/inscription/">Créer mon compte</a><a href="/login/">Connexion</a><a href="#">Conseils carrière</a></div>
+        <div class="footer-col"><h4>Recruteurs</h4><a href="/inscription/">Publier une offre</a><a href="/login/">Espace recruteur</a><a href="#">Tarifs</a></div>
+        <div class="footer-col"><h4>Suivez‑nous</h4><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a><a href="#"><i class="fab fa-twitter"></i> Twitter</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 OBMI Recrutement – Tous droits réservés</p></div>
+</div>
+
+<script>
+    document.getElementById('menuBtn')?.addEventListener('click', () => document.getElementById('navLinks').classList.toggle('show'));
+    document.getElementById('searchBtn')?.addEventListener('click', () => {
+        const keyword = document.getElementById('searchInput').value;
+        if(keyword) window.location.href = "/offres/?q=" + encodeURIComponent(keyword);
+    });
+    document.querySelectorAll('.faq-question').forEach(q => {
+        q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+    });
+</script>
+
 </body>
 </html>

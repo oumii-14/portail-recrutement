@@ -83,10 +83,19 @@ class Candidat(models.Model):
 
 
 class Offre(models.Model):
+    CONTRAT_CHOICES = [
+        ('CDI', 'CDI'),
+        ('CDD', 'CDD'),
+        ('Stage', 'Stage'),
+        ('Alternance', 'Alternance'),
+    ]
+
     titre = models.CharField(max_length=200)
     description = models.TextField()
     lieu = models.CharField(max_length=100)
+    type_contrat = models.CharField(max_length=20, choices=CONTRAT_CHOICES, default='CDI')
     datePublication = models.DateTimeField(auto_now_add=True)
+    date_expiration = models.DateField(null=True, blank=True)
     recruteur = models.ForeignKey(Recruteur, on_delete=models.CASCADE, related_name='offres')
 
     def __str__(self):
@@ -115,9 +124,14 @@ class Candidature(models.Model):
 
 
 class Document(models.Model):
+    TYPE_CHOICES = [
+    ('cv', 'CV'),
+    ('lettre_motivation', 'Lettre de motivation'),
+]
     candidat = models.ForeignKey(Candidat, on_delete=models.CASCADE, related_name='documents')
-    type = models.CharField(max_length=50)   # CV, lettre_motivation
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES)   # CV, lettre_motivation
     fichier = models.FileField(upload_to='documents/')
+    contenu = models.TextField(blank=True, null=True)
     date_upload = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

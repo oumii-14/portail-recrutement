@@ -23,7 +23,7 @@
             margin: 15px 0 5px;
             font-weight: bold;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -53,6 +53,17 @@
 
             <label>Lieu</label>
             <input type="text" name="lieu" value="{{ offre.lieu }}" required>
+
+            <label>Type de contrat</label>
+            <select name="type_contrat">
+                <option value="CDI" {% if offre.type_contrat == 'CDI' %}selected{% endif %}>CDI</option>
+                <option value="CDD" {% if offre.type_contrat == 'CDD' %}selected{% endif %}>CDD</option>
+                <option value="Stage" {% if offre.type_contrat == 'Stage' %}selected{% endif %}>Stage</option>
+                <option value="Alternance" {% if offre.type_contrat == 'Alternance' %}selected{% endif %}>Alternance</option>
+            </select>
+
+            <label>Date d'expiration</label>
+            <input type="date" name="date_expiration" value="{{ offre.date_expiration|date:'Y-m-d' }}">
 
             <button type="submit">Enregistrer</button>
             <a href="/dashboard/" style="margin-left: 10px;">Annuler</a>

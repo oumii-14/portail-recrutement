@@ -1,330 +1,676 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – OBMI Recrutement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ========== RESET & BASE ========== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F7;
+            color: #1A1A1A;
+        }
+
+        .app-layout {
             display: flex;
             min-height: 100vh;
         }
-        
-        /* ========== MENU LATERAL ========== */
+
+        /* SIDEBAR */
         .sidebar {
-            width: 280px;
-            background: linear-gradient(135deg, #2c3e50, #1a252f);
-            color: white;
+            width: 260px;
+            background: #FFFFFF;
+            border-right: 1px solid #EAEAEA;
+            padding: 28px 20px;
             display: flex;
             flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            left: 0;
+            transition: all 0.3s ease;
+            position: sticky;
             top: 0;
+            height: 100vh;
         }
-        .sidebar-header { padding: 30px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h2 { font-size: 22px; margin-bottom: 5px; }
-        .sidebar-header p { font-size: 12px; color: #aaa; }
-        .sidebar-menu { flex: 1; padding: 20px 0; }
-        .sidebar-menu a {
+
+        .sidebar.hidden {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+            visibility: hidden;
+        }
+
+        .logo-sidebar {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            padding-left: 12px;
+        }
+
+        .logo-sidebar .blue {
+            background: linear-gradient(135deg, #0A2540, #1E3A5F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #1E3A5F;
+        }
+
+        .logo-sidebar .light {
+            color: #5F6F82;
+            font-weight: 500;
+        }
+
+        .nav-item {
             display: flex;
             align-items: center;
-            padding: 12px 25px;
-            color: #ccc;
-            text-decoration: none;
-            transition: 0.3s;
             gap: 12px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
+            border-radius: 10px;
+            color: #4A4A4A;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
-        .sidebar-menu a:hover { background: rgba(255,255,255,0.1); color: white; }
-        .sidebar-menu a.active { background: #667eea; color: white; }
-        .sidebar-menu .icon { font-size: 18px; width: 25px; }
-        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-footer a {
+
+        .nav-item i {
+            width: 20px;
+            font-size: 16px;
+            color: #6B6B6B;
+        }
+
+        .nav-item:hover {
+            background: #F0F0F0;
+            color: #111111;
+        }
+
+        .nav-item.active {
+            background: #1E3A5F;
+            color: #FFFFFF;
+        }
+
+        .nav-item.active i {
+            color: #FFFFFF;
+        }
+
+        /* Profil & Déconnexion */
+        .profil-section {
+            margin-top: auto;
+            padding-bottom: 12px;
+        }
+
+        .logout-sidebar {
+            padding-top: 12px;
+            border-top: 1px solid #EAEAEA;
+        }
+
+        .logout-sidebar a, .profil-section a {
             display: flex;
             align-items: center;
             gap: 12px;
-            color: #ccc;
+            padding: 10px 14px;
+            border-radius: 10px;
             text-decoration: none;
-            padding: 10px;
-            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
         }
-        .sidebar-footer a:hover { background: rgba(255,255,255,0.1); color: white; }
-        
-        /* ========== CONTENU PRINCIPAL ========== */
-        .main-content { flex: 1; margin-left: 280px; padding: 20px; }
-        .content-header {
-            background: white;
+
+        .profil-section a {
+            color: #1E3A5F;
+        }
+
+        .profil-section a:hover {
+            background: #EFF6FF;
+        }
+
+        .logout-sidebar a {
+            color: #DC2626;
+        }
+
+        .logout-sidebar a:hover {
+            background: #FEF2F2;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 28px 40px;
+            overflow-y: auto;
+        }
+
+        .toggle-sidebar-btn {
+            background: #FFFFFF;
+            border: 1px solid #EAEAEA;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 24px;
         }
-        .content-header h1 { font-size: 24px; color: #333; }
-        .content-header p { color: #666; margin-top: 5px; }
-        
-        /* ========== STATISTIQUES ========== */
+
+        .toggle-sidebar-btn:hover {
+            background: #F5F5F5;
+            border-color: #CCCCCC;
+        }
+
+        .toggle-sidebar-btn i {
+            font-size: 18px;
+            color: #333333;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .welcome h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        .welcome p {
+            color: #666666;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .user-badge {
+            background: #EFF6FF;
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #BFDBFE;
+            font-size: 13px;
+            color: #1E3A5F;
+            font-weight: 500;
+        }
+
+        /* ALEX CARD */
+        .alex-card {
+            background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%);
+            border: 1px solid #BFDBFE;
+            border-radius: 16px;
+            padding: 18px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .alex-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E3A5F;
+        }
+
+        .alex-card p {
+            font-size: 12px;
+            color: #1E40AF;
+            margin-top: 4px;
+        }
+
+        .alex-btn {
+            background: #1E3A5F;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: 0.2s;
+            display: inline-block;
+        }
+
+        .alex-btn:hover {
+            background: #0A2540;
+            transform: translateY(-1px);
+        }
+
+        /* STATS (non cliquables) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 40px;
         }
+
         .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            border: 1px solid #EAEAEA;
+            transition: all 0.2s ease;
+            display: block;
         }
-        .stat-card h3 { color: #667eea; font-size: 13px; margin-bottom: 8px; }
-        .stat-card .number { font-size: 28px; font-weight: bold; color: #333; }
-        
-        /* ========== CARTES ========== */
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #BFDBFE;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
-        .card h3 { margin-bottom: 15px; color: #333; }
-        
-        /* ========== TABLEAUX ========== */
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; font-weight: 600; }
-        
-        /* ========== BOUTONS ========== */
-        .btn {
-            display: inline-block;
-            padding: 6px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
+
+        .stat-card i {
+            font-size: 28px;
+            color: #1E3A5F;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h3 {
             font-size: 12px;
-            border: none;
+            font-weight: 600;
+            color: #888888;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #111111;
+            line-height: 1;
+        }
+
+        /* NAVIGATION RAPIDE */
+        .nav-rapide-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-rapide-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .nav-rapide-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .nav-pill {
+            background: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            border-radius: 40px;
+            padding: 8px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
         }
-        .btn-danger { background: #dc3545; }
-        .btn-success { background: #28a745; }
-        .btn-warning { background: #ffc107; color: #333; }
-        .btn-info { background: #17a2b8; }
-        
-        /* ========== BADGES ========== */
-        .badge {
-            background: #e74c3c;
-            color: white;
-            border-radius: 20px;
+
+        .nav-pill:hover {
+            background: #EFF6FF;
+            border-color: #BFDBFE;
+            transform: translateY(-1px);
+        }
+
+        .nav-pill i {
+            font-size: 14px;
+            color: #1E3A5F;
+        }
+
+        .nav-pill span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .nav-pill .pill-count {
+            background: #EFF6FF;
+            color: #1E3A5F;
+            font-size: 11px;
+            font-weight: 600;
             padding: 2px 8px;
+            border-radius: 30px;
+            margin-left: 6px;
+        }
+
+        /* SUGGESTIONS */
+        .suggestions-section {
+            margin-top: 20px;
+        }
+
+        .suggestions-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .suggestion-card {
+            background: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            border-radius: 14px;
+            padding: 18px 20px;
+            transition: 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .suggestion-card:hover {
+            border-color: #BFDBFE;
+            transform: translateY(-2px);
+        }
+
+        .suggestion-card i {
+            font-size: 24px;
+            color: #1E3A5F;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 6px;
+        }
+
+        .suggestion-card p {
             font-size: 12px;
-            margin-left: 8px;
+            color: #777777;
         }
-        
-        /* ========== STATUTS ========== */
-        .empty { text-align: center; padding: 20px; color: #999; }
-        .status-accepte { color: #28a745; font-weight: 600; }
-        .status-refuse { color: #dc3545; font-weight: 600; }
-        .status-attente { color: #ffc107; font-weight: 600; }
-        
-        /* OULAY CARD */
-        .oulay-card {
-            background: #eef2ff;
-            border-left: 5px solid #2563eb;
-            margin-bottom: 20px;
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 1000;
+                transform: translateX(0);
+            }
+            .sidebar.hidden {
+                transform: translateX(-100%);
+                width: 260px;
+                visibility: visible;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-rapide-grid {
+                flex-direction: column;
+            }
+            .nav-pill {
+                justify-content: center;
+            }
         }
-        .oulay-card h3 {
-            color: #1e3a8a;
-        }
-        .oulay-btn {
-            background: #8b5cf6 !important;
-            white-space: nowrap;
-        }
-        .text-muted { color: #999; }
     </style>
 </head>
 <body>
-    <!-- ========== MENU LATERAL ========== -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>Recrutement</h2>
-            <p>Plateforme de gestion</p>
+
+<div class="app-layout">
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+        <div class="logo-sidebar">
+            <span class="blue">OBMI</span><span class="light">Recrutement</span>
         </div>
-        
-        <div class="sidebar-menu">
+        <div class="nav-items">
+            <a href="/" class="nav-item"><i class="fas fa-home"></i> Accueil</a>
+            
             {% if user.role == 'candidat' %}
-                <!-- MENU CANDIDAT -->
-                <a href="/dashboard/" class="active"><span class="icon">🏠</span><span>Accueil</span></a>
-                <a href="/offres/"><span class="icon">💼</span><span>Offres d'emploi</span></a>
-                <a href="/mes-candidatures/"><span class="icon">📋</span><span>Mes candidatures</span></a>
-                <a href="/messages/">
-                    <span class="icon">💬</span><span>Messages</span>
-                    {% if messages_non_lus > 0 %}<span class="badge">{{ messages_non_lus }}</span>{% endif %}
-                </a>
-                <a href="/notifications/"><span class="icon">🔔</span><span>Notifications</span></a>
+                <a href="/offres/" class="nav-item active"><i class="fas fa-search"></i> Explorer offres</a>
+                <a href="/mes-candidatures/" class="nav-item"><i class="fas fa-file-alt"></i> Mes candidatures</a>
+                <a href="/entretiens/" class="nav-item"><i class="fas fa-calendar-alt"></i> Entretiens</a>
+                <a href="/mes-documents/" class="nav-item">
+                 <i class="fas fa-folder-open"></i> Mes documents
+                </a> 
+                <a href="/messages/" class="nav-item"><i class="fas fa-comments"></i> Messages</a>
+                <a href="/notifications/" class="nav-item"><i class="fas fa-bell"></i> Notifications</a>
             {% else %}
-                <!-- MENU RECRUTEUR -->
-                <a href="/dashboard/" class="active"><span class="icon">🏠</span><span>Accueil</span></a>
-                <a href="/mes-offres/"><span class="icon">📢</span><span>Mes offres</span></a>
-                <a href="/candidatures-recues/"><span class="icon">📄</span><span>Candidatures reçues</span></a>
-                <a href="/entretiens/">
-                    <span class="icon">📅</span><span>Entretiens</span>
-                    {% if entretiens_a_venir > 0 %}<span class="badge">{{ entretiens_a_venir }}</span>{% endif %}
-                </a>
-                <a href="/messages/">
-                    <span class="icon">💬</span><span>Messages</span>
-                    {% if messages_non_lus > 0 %}<span class="badge">{{ messages_non_lus }}</span>{% endif %}
-                </a>
-                <a href="/notifications/"><span class="icon">🔔</span><span>Notifications</span></a>
+                <a href="/mes-offres/" class="nav-item active"><i class="fas fa-briefcase"></i> Mes offres</a>
+                <a href="/candidatures-recues/" class="nav-item"><i class="fas fa-users"></i> Candidatures reçues</a>
+                <a href="/entretiens/" class="nav-item"><i class="fas fa-calendar-alt"></i> Entretiens</a>
+                <a href="/messages/" class="nav-item"><i class="fas fa-comments"></i> Messages</a>
+                <a href="/notifications/" class="nav-item"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="/creer-offre/" class="nav-item"><i class="fas fa-plus-circle"></i> Publier une offre</a>
             {% endif %}
         </div>
         
-        <div class="sidebar-footer">
-            <a href="/profil/"><span class="icon">👤</span><span>Mon profil</span></a>
-            <a href="/deconnexion/" style="color: #e74c3c;"><span class="icon">🚪</span><span>Déconnexion</span></a>
+        <!-- PROFIL -->
+        <div class="profil-section">
+            <a href="/profil/">
+                <i class="fas fa-user-circle"></i> Mon profil
+            </a>
+        </div>
+        
+        <div class="logout-sidebar">
+            <a href="/deconnexion/">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
         </div>
     </div>
-    
-    <!-- ========== CONTENU PRINCIPAL ========== -->
+
+    <!-- MAIN CONTENT -->
     <div class="main-content">
-        
-        <!-- HEADER -->
-        <div class="content-header">
-            <h1>Bonjour {{ user.prenom }} {{ user.nom }}</h1>
-            <p>Bienvenue sur votre tableau de bord</p>
+        <div id="toggleSidebarBtn" class="toggle-sidebar-btn">
+            <i class="fas fa-bars"></i>
         </div>
-        
-        <!-- OULAY CARD -->
-        <div class="card oulay-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                <div>
-                    <h3>🤖 OULAY te conseille</h3>
-                    <p style="font-size: 16px;">{{ oulay_message }}</p>
-                </div>
-                {% if user.role == 'candidat' %}
-                    <a href="/oulay-offre-ideale/" class="btn oulay-btn">🧠 Trouver mon offre idéale</a>
-                {% else %}
-                    <a href="/oulay-aide-offre/" class="btn oulay-btn">✍️ OULAY – Rédiger une offre</a>
-                {% endif %}
+
+        <div class="content-header">
+            <div class="welcome">
+                <h1>Bonjour {{ user.prenom }} {{ user.nom }}</h1>
+                <p>Bienvenue sur votre tableau de bord</p>
+            </div>
+            <div class="user-badge">
+                <i class="fas fa-user-circle"></i> {{ user.role|title }}
             </div>
         </div>
-        
-        <!-- ========== STATISTIQUES ========== -->
+
+        <!-- ALEX -->
+        <div class="alex-card">
+            <div>
+                <h3>🤖 ALEX, votre assistant intelligent</h3>
+                <p>{{ alex_message|default:"Je vous guide pour optimiser votre expérience" }}</p>
+            </div>
+            {% if user.role == 'candidat' %}
+                <a href="/alex-offre-ideale/" class="alex-btn">🧠 Trouver mon offre idéale →</a>
+            {% else %}
+                <a href="/alex-aide-offre/" class="alex-btn">✍️ Optimiser mes offres →</a>
+            {% endif %}
+        </div>
+
+        <!-- STATS -->
         <div class="stats-grid">
             {% if user.role == 'candidat' %}
-                <div class="stat-card"><h3>Mes candidatures</h3><div class="number">{{ candidatures_count|default:"0" }}</div></div>
-                <div class="stat-card"><h3>Entretiens</h3><div class="number">{{ entretiens_count|default:"0" }}</div></div>
-                <div class="stat-card"><h3>Messages</h3><div class="number">{{ messages_non_lus|default:"0" }}</div></div>
+                <div class="stat-card">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>MES CANDIDATURES</h3>
+                    <div class="stat-number">{{ candidatures_count|default:"0" }}</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>ENTRETIENS</h3>
+                    <div class="stat-number">{{ entretiens_count|default:"0" }}</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>MESSAGES NON LUS</h3>
+                    <div class="stat-number">{{ messages_non_lus|default:"0" }}</div>
+                </div>
             {% else %}
-                <div class="stat-card"><h3>Mes offres</h3><div class="number">{{ offres_count|default:"0" }}</div></div>
-                <div class="stat-card"><h3>Candidatures reçues</h3><div class="number">{{ total_candidatures|default:"0" }}</div></div>
-                <div class="stat-card"><h3>Entretiens</h3><div class="number">{{ entretiens_a_venir|default:"0" }}</div></div>
-                <div class="stat-card"><h3>Messages</h3><div class="number">{{ messages_non_lus|default:"0" }}</div></div>
+                <div class="stat-card">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>MES OFFRES</h3>
+                    <div class="stat-number">{{ offres_count|default:"0" }}</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>CANDIDATURES REÇUES</h3>
+                    <div class="stat-number">{{ total_candidatures|default:"0" }}</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>ENTRETIENS À VENIR</h3>
+                    <div class="stat-number">{{ entretiens_a_venir|default:"0" }}</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-comment-dots"></i>
+                    <h3>MESSAGES NON LUS</h3>
+                    <div class="stat-number">{{ messages_non_lus|default:"0" }}</div>
+                </div>
             {% endif %}
         </div>
-        
-        <!-- ========== PARTIE CANDIDAT ========== -->
-        {% if user.role == 'candidat' %}
-        <div class="card">
-            <h3>Offres d'emploi disponibles</h3>
-            <table>
-                <thead><tr><th>Titre</th><th>Description</th><th>Lieu</th><th>Action</th></tr></thead>
-                <tbody>
-                    {% for offre in offres %}
-                    <tr>
-                        <td>{{ offre.titre }}</td>
-                        <td>{{ offre.description|truncatewords:8 }}</td>
-                        <td>{{ offre.lieu }}</td>
-                        <td><a href="/postuler/{{ offre.id }}/" class="btn">Postuler</a></td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="4" class="empty">Aucune offre disponible</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="card">
-            <h3>Mes candidatures</h3>
-            <table>
-                <thead><tr><th>Offre</th><th>Date</th><th>Statut</th></tr></thead>
-                <tbody>
-                    {% for candidature in mes_candidatures %}
-                    <tr>
-                        <td>{{ candidature.offre.titre }}</td>
-                        <td>{{ candidature.datePostulation|date:"d/m/Y" }}</td>
-                        <td class="status-{{ candidature.statut.nom }}">{{ candidature.statut.nom }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="3" class="empty">Aucune candidature</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
-        
-        <!-- ========== PARTIE RECRUTEUR ========== -->
-        {% if user.role == 'recruteur' %}
-        <div class="card">
-            <h3>Mes offres</h3>
-            <div style="margin-bottom:15px;">
-                <a href="/creer-offre/" class="btn btn-success">+ Creer une offre</a>
+
+        <!-- NAVIGATION RAPIDE -->
+        <div class="nav-rapide-section">
+            <div class="nav-rapide-title">📍 NAVIGATION RAPIDE</div>
+            <div class="nav-rapide-grid">
+                
+                {% if user.role == 'candidat' %}
+                <a href="/offres/" class="nav-pill">
+                    <i class="fas fa-search"></i>
+                    <span>Explorer les offres</span>
+                    <span class="pill-count">{{ offres_disponibles_count|default:"0" }}</span>
+                </a>
+                <a href="/mes-candidatures/" class="nav-pill">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Suivi candidatures</span>
+                    <span class="pill-count">{{ candidatures_count|default:"0" }}</span>
+                </a>
+                <a href="/entretiens/" class="nav-pill">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Entretiens</span>
+                    <span class="pill-count">{{ entretiens_count|default:"0" }}</span>
+                </a>
+                {% else %}
+                <a href="/mes-offres/" class="nav-pill">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Mes offres</span>
+                    <span class="pill-count">{{ offres_count|default:"0" }}</span>
+                </a>
+                <a href="/candidatures-recues/" class="nav-pill">
+                    <i class="fas fa-users"></i>
+                    <span>Candidatures reçues</span>
+                    <span class="pill-count">{{ total_candidatures|default:"0" }}</span>
+                </a>
+                <a href="/entretiens/" class="nav-pill">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Entretiens</span>
+                    <span class="pill-count">{{ entretiens_a_venir|default:"0" }}</span>
+                </a>
+                {% endif %}
+                <a href="/messages/" class="nav-pill">
+                    <i class="fas fa-comments"></i>
+                    <span>Messagerie</span>
+                    <span class="pill-count">{{ messages_non_lus|default:"0" }}</span>
+                </a>
+                <a href="/notifications/" class="nav-pill">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    <span class="pill-count">{{ notifications_count|default:"0" }}</span>
+                </a>
             </div>
-            <table>
-                <thead><tr><th>Titre</th><th>Lieu</th><th>Date</th><th>Candidatures</th><th>Actions</th></tr></thead>
-                <tbody>
-                    {% for offre in mes_offres %}
-                    <tr>
-                        <td>{{ offre.titre }}</td>
-                        <td>{{ offre.lieu }}</td>
-                        <td>{{ offre.datePublication|date:"d/m/Y" }}</td>
-                        <td>{{ offre.candidatures.count }}</td>
-                        <td>
-                            <a href="/modifier-offre/{{ offre.id }}/" class="btn">Modifier</a>
-                            <a href="/supprimer-offre/{{ offre.id }}/" class="btn btn-danger">Supprimer</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                        <tr><td colspan="5" class="empty">Aucune offre publiée</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
-        
-        <div class="card">
-            <h3>Dernières candidatures reçues</h3>
-            <table>
-                <thead>
-                    <tr><th>Candidat</th><th>Offre</th><th>Date</th><th>Statut</th><th>Actions</th></tr>
-                </thead>
-                <tbody>
-                    {% for candidature in dernieres_candidatures %}
-                    <tr>
-                        <td>{{ candidature.candidat.utilisateur.prenom }} {{ candidature.candidat.utilisateur.nom }}</td>
-                        <td>{{ candidature.offre.titre }}</td>
-                        <td>{{ candidature.datePostulation|date:"d/m/Y" }}</td>
-                        <td class="status-{{ candidature.statut.nom }}">{{ candidature.statut.nom }}</td>
-                        <td style="display: flex; gap: 5px; flex-wrap: wrap;">
-                            <a href="/accepter/{{ candidature.id }}/" class="btn btn-success">Accepter</a>
-                            <a href="/rejeter/{{ candidature.id }}/" class="btn btn-danger">Rejeter</a>
-                            <a href="/planifier-entretien/{{ candidature.id }}/" class="btn btn-warning">Entretien</a>
-                            {% with doc=candidature.candidat.documents.first %}
-                                {% if doc and doc.fichier %}
-                                    <a href="{{ doc.fichier.url }}" target="_blank" class="btn btn-info">📄 Voir CV</a>
-                                {% else %}
-                                    <span class="text-muted">Pas de CV</span>
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                        <tr><td colspan="5" class="empty">Aucune candidature reçue</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+
+<!-- SUGGESTIONS -->
+<div class="suggestions-section">
+    <div class="suggestions-title">
+        {% if user.role == 'candidat' %}
+            🔥 OFFRES SUGGÉRÉES
+        {% else %}
+            🔥 CANDIDATS SUGGÉRÉS
         {% endif %}
     </div>
+    <div class="suggestions-grid">
+        {% if user.role == 'candidat' %}
+            {% for offre in offres_suggestions|slice:":3" %}
+            <a href="/offres/" class="suggestion-card">
+                <i class="fas fa-briefcase"></i>
+                <h4>{{ offre.titre }}</h4>
+                <p>{{ offre.type_contrat }} - {{ offre.lieu }}</p>
+            </a>
+            {% empty %}
+            <div class="suggestion-card">
+                <i class="fas fa-briefcase"></i>
+                <h4>Data Analyst</h4>
+                <p>CDI - Paris</p>
+            </div>
+            <div class="suggestion-card">
+                <i class="fas fa-code"></i>
+                <h4>DevOps Senior</h4>
+                <p>CDI - Lyon</p>
+            </div>
+            <div class="suggestion-card">
+                <i class="fas fa-mobile-alt"></i>
+                <h4>Dev Spring Boot</h4>
+                <p>Remote</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            {% for candidat in candidats_suggestions|slice:":3" %}
+            <a href="/candidatures-recues/?user={{ candidat.utilisateur.id }}" class="suggestion-card">
+                <i class="fas fa-user-circle"></i>
+                <h4>{{ candidat.utilisateur.prenom }} {{ candidat.utilisateur.nom }}</h4>
+                <p>{{ candidat.profil|truncatechars:60 }}</p>
+            </a>
+            {% empty %}
+            <div class="suggestion-card">
+                <i class="fas fa-user-circle"></i>
+                <h4>Jean Dupont</h4>
+                <p>Data Analyst</p>
+            </div>
+            <div class="suggestion-card">
+                <i class="fas fa-user-circle"></i>
+                <h4>Marie Curie</h4>
+                <p>DevOps</p>
+            </div>
+            <div class="suggestion-card">
+                <i class="fas fa-user-circle"></i>
+                <h4>Thomas Martin</h4>
+                <p>Spring Boot</p>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSidebarBtn');
+    let visible = true;
+    toggleBtn.addEventListener('click', () => {
+        if (visible) sidebar.classList.add('hidden');
+        else sidebar.classList.remove('hidden');
+        visible = !visible;
+    });
+</script>
 </body>
 </html>

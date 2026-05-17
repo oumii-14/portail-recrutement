@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALEX – Offre générée | OBMI Recrutement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F7;
+            color: #1A1A1A;
+        }
+
+        /* HEADER */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #EAEAEA;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .logo .blue {
+            background: linear-gradient(135deg, #0A2540, #1E3A5F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #1E3A5F;
+        }
+
+        .logo .light {
+            color: #5F6F82;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A4A4A;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1E3A5F;
+        }
+
+        .nav-links .btn-logout {
+            background: #FEF2F2;
+            border: 1px solid #FEE2E2;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #DC2626;
+        }
+
+        .nav-links .btn-logout:hover {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px 40px;
+        }
+
+        /* RESULT CARD */
+        .result-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid #EAEAEA;
+            overflow: hidden;
+        }
+
+        /* HEADER SECTION */
+        .result-header {
+            background: linear-gradient(135deg, #1E3A5F 0%, #0A2540 100%);
+            padding: 32px;
+            text-align: center;
+            color: white;
+        }
+
+        .result-header i {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .result-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .result-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* OFFRE INFO */
+        .offre-info {
+            padding: 28px;
+            border-bottom: 1px solid #EAEAEA;
+            background: #FAFAFA;
+        }
+
+        .offre-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .offre-title i {
+            color: #1E3A5F;
+        }
+
+        .offre-lieu {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #EFF6FF;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #1E3A5F;
+            margin-bottom: 20px;
+        }
+
+        /* DESCRIPTION SECTION */
+        .description-section {
+            padding: 28px;
+        }
+
+        .description-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .description-section h3 i {
+            color: #1E3A5F;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #EAEAEA;
+            border-radius: 16px;
+            font-size: 13px;
+            font-family: 'Inter', monospace;
+            line-height: 1.6;
+            resize: vertical;
+            background: #FAFAFA;
+            color: #333333;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1E3A5F;
+        }
+
+        .copy-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding: 12px;
+            background: #EFF6FF;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #1E3A5F;
+        }
+
+        .copy-note i {
+            font-size: 18px;
+        }
+
+        /* BUTTONS */
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            padding: 0 28px 28px 28px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #1E3A5F;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: #0A2540;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #F5F5F5;
+            border: 1px solid #EAEAEA;
+            color: #666666;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            background: #EFF6FF;
+            color: #1E3A5F;
+            border-color: #BFDBFE;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #EAEAEA;
+            color: #666666;
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: #F5F5F5;
+        }
+
+        /* BACK LINK */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #1E3A5F;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            margin-top: 24px;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .container {
+                padding: 24px 20px;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+            .offre-title {
+                font-size: 18px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <span class="blue">OBMI</span><span class="light">Recrutement</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="/dashboard/">Dashboard</a>
+            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="result-card">
+            <div class="result-header">
+                <i class="fas fa-robot"></i>
+                <h1>✍️ ALEX – Votre offre est prête</h1>
+                <p>Voici la description générée pour votre annonce</p>
+            </div>
+
+            <div class="offre-info">
+                <div class="offre-title">
+                    <i class="fas fa-bullhorn"></i>
+                    {{ titre }}
+                </div>
+                <div class="offre-lieu">
+                    <i class="fas fa-map-marker-alt"></i> {{ lieu }}
+                </div>
+            </div>
+
+            <div class="description-section">
+                <h3><i class="fas fa-file-alt"></i> Description de l'offre</h3>
+                <textarea id="offreDescription" readonly rows="10">{{ description }}</textarea>
+                <div class="copy-note">
+                    <i class="fas fa-copy"></i>
+                    <span>Copiez ce texte et collez-le dans le formulaire de création d'offre</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/creer-offre/" class="btn-primary">
+                    <i class="fas fa-plus-circle"></i> Créer mon offre
+                </a>
+                <a href="/alex-aide-offre/" class="btn-secondary">
+                    <i class="fas fa-sync-alt"></i> Générer une autre offre
+                </a>
+            </div>
+        </div>
+
+        <!-- BACK LINK -->
+        <a href="/dashboard/" class="back-link">
+            <i class="fas fa-arrow-left"></i> Retour au dashboard
+        </a>
+    </div>
+
+    <script>
+        // Sélectionner le textearea au clic sur la note
+        document.querySelector('.copy-note')?.addEventListener('click', function() {
+            const textarea = document.getElementById('offreDescription');
+            textarea.select();
+            document.execCommand('copy');
+            
+            // Feedback visuel
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Texte copié !';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

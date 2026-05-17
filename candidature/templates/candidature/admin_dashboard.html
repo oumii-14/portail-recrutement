@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Supervision</title>
+    <title>Admin Dashboard – OBMI Recrutement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,273 +15,649 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: #f0f2f5;
-            padding: 30px;
-            color: #1e293b;
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F7;
+            color: #1A1A1A;
         }
 
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* HEADER */
-        .dashboard-header {
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #EAEAEA;
+            padding: 16px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
             flex-wrap: wrap;
-        }
-        .dashboard-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: none;
-            color: #1e3a8a;
-        }
-        .dashboard-header a {
-            background: white;
-            padding: 8px 18px;
-            border-radius: 30px;
-            text-decoration: none;
-            color: #1e3a8a;
-            font-weight: 500;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: 0.2s;
-        }
-        .dashboard-header a:hover {
-            background: #eef2ff;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* GRILLE STATS PRINCIPALES */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-bottom: 35px;
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
         }
-        .stat-card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            text-align: center;
-            transition: 0.2s;
-            border: 1px solid #e2e8f0;
+
+        .logo .blue {
+            background: linear-gradient(135deg, #0A2540, #1E3A5F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: #1E3A5F;
         }
-        .stat-card h3 {
+
+        .logo .light {
+            color: #5F6F82;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A4A4A;
             font-size: 14px;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #64748b;
-            margin-bottom: 12px;
-        }
-        .stat-number {
-            font-size: 40px;
-            font-weight: 800;
-            color: #1e3a8a;
+            transition: 0.2s;
         }
 
-        /* DEUX COLONNES */
-        .two-columns {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            margin-bottom: 35px;
+        .nav-links a:hover {
+            color: #1E3A5F;
         }
-        .card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+
+        .nav-links .btn-logout {
+            background: #FEF2F2;
+            border: 1px solid #FEE2E2;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #DC2626;
         }
-        .card h2 {
-            font-size: 20px;
+
+        .nav-links .btn-logout:hover {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 40px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        .page-header p {
+            color: #666666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export-csv {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #EFF6FF;
+            color: #1E3A5F;
+            border: 1px solid #BFDBFE;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 15px;
-            border-left: 5px solid #3b82f6;
-            padding-left: 12px;
+            text-decoration: none;
+            transition: 0.2s;
         }
-        .statut-badge {
+
+        .btn-export-csv:hover {
+            background: #DBEAFE;
+            transform: translateY(-1px);
+        }
+
+        .btn-export-pdf {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-export-pdf:hover {
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
+
+        .admin-link {
+            background: #1E3A5F;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .admin-link:hover {
+            background: #0A2540;
+            transform: translateY(-1px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+            border: 1px solid #EAEAEA;
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #BFDBFE;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .stat-card i {
+            font-size: 32px;
+            color: #1E3A5F;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h3 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        .status-badge {
             display: inline-block;
             padding: 4px 12px;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
         }
-        .statut-attente { background: #fef3c7; color: #b45309; }
-        .statut-acceptee { background: #dcfce7; color: #15803d; }
-        .statut-rejetee { background: #fee2e2; color: #b91c1c; }
-        .statut-entretien { background: #dbeafe; color: #1e40af; }
+
+        .status-en_attente {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-acceptee {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .status-rejetee {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .status-entretien {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #EAEAEA;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #EAEAEA;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i {
+            color: #1E3A5F;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .three-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
-            text-align: left;
-            padding: 12px 6px;
-            border-bottom: 1px solid #e2e8f0;
-        }
+
         th {
-            color: #475569;
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 12px;
             font-weight: 600;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #EAEAEA;
+            background: #FAFAFA;
         }
+
+        td {
+            padding: 14px 12px;
+            font-size: 13px;
+            color: #333333;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #FAFAFA;
+        }
+
         .badge-count {
-            background: #e2e8f0;
+            background: #EFF6FF;
             padding: 2px 10px;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
+            color: #1E3A5F;
         }
+
+        .repartition-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .repartition-item {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .repartition-item .status-badge {
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .repartition-item strong {
+            font-size: 24px;
+            font-weight: 800;
+            color: #111111;
+        }
+
         .footer-note {
             text-align: center;
-            margin-top: 30px;
-            font-size: 13px;
-            color: #617388;
+            padding: 20px;
+            margin-top: 20px;
+            color: #888888;
+            font-size: 12px;
+            border-top: 1px solid #EAEAEA;
         }
-        hr {
-            margin: 15px 0;
-            border-color: #e9eef3;
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #1E3A5F;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            margin-top: 16px;
         }
-        @media (max-width: 700px) {
-            body { padding: 15px; }
-            .two-columns { grid-template-columns: 1fr; }
+
+        .back-link:hover {
+            gap: 12px;
+        }
+
+        canvas {
+            max-height: 280px;
+        }
+
+        /* Badge entretien */
+        .entretien-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .type-physique { background: #F3E8FF; color: #6B21A5; }
+        .type-visio { background: #DBEAFE; color: #1E40AF; }
+        .type-telephone { background: #DCFCE7; color: #166534; }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .container {
+                padding: 24px 20px;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .export-buttons {
+                flex-direction: column;
+            }
+            .btn-export-csv, .btn-export-pdf {
+                justify-content: center;
+            }
+            .two-columns, .three-columns {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .repartition-grid {
+                flex-direction: column;
+                gap: 12px;
+            }
+            th, td {
+                padding: 10px 8px;
+                font-size: 11px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="dashboard-container">
-    <div class="dashboard-header">
-        <h1>📊 Supervision & Statistiques</h1>
-        <a href="/admin/">⚙️ Accéder à l’administration Django</a>
-    </div>
 
-    <!-- ==================== STATS GLOBALES ==================== -->
-    <div class="stats-grid">
-        <div class="stat-card"><h3>📄 Offres</h3><div class="stat-number">{{ total_offres }}</div></div>
-        <div class="stat-card"><h3>👥 Candidats</h3><div class="stat-number">{{ total_candidats }}</div></div>
-        <div class="stat-card"><h3>🏢 Recruteurs</h3><div class="stat-number">{{ total_recruteurs }}</div></div>
-        <div class="stat-card"><h3>📋 Candidatures</h3><div class="stat-number">{{ total_candidatures }}</div></div>
-        <div class="stat-card"><h3>🎤 Entretiens</h3><div class="stat-number">{{ total_entretiens }}</div></div>
-        <div class="stat-card"><h3>💬 Messages</h3><div class="stat-number">{{ total_messages }}</div></div>
-    </div>
-
-    <!-- ==================== DÉTAILS STATUT CANDIDATURES ==================== -->
-    <div class="card" style="margin-bottom: 25px;">
-        <h2>📌 Répartition des candidatures</h2>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-around;">
-            <div><span class="statut-badge statut-attente">⏳ En attente</span> : <strong>{{ candidatures_attente }}</strong></div>
-            <div><span class="statut-badge statut-acceptee">✅ Acceptées</span> : <strong>{{ candidatures_acceptees }}</strong></div>
-            <div><span class="statut-badge statut-rejetee">❌ Refusées</span> : <strong>{{ candidatures_refusees }}</strong></div>
-            <div><span class="statut-badge statut-entretien">📅 Entretien</span> : <strong>{{ candidatures_entretien }}</strong></div>
+    <div class="header">
+        <div class="logo">
+            <span class="blue">OBMI</span><span class="light">Recrutement</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="/admin/">Administration</a>
+            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
         </div>
     </div>
 
-    <!-- ==================== DEUX COLONNES : offres populaires + entretiens ==================== -->
-    <div class="two-columns">
-        <!-- Offres les plus populaires -->
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>📊 Supervision & Statistiques</h1>
+                <p>Tableau de bord administrateur</p>
+            </div>
+            <a href="/admin/" class="admin-link">
+                <i class="fas fa-cog"></i> Administration Django
+            </a>
+        </div>
+
+        <div class="export-buttons">
+            <a href="{% url 'export_statistiques' %}" class="btn-export-csv">
+                <i class="fas fa-file-csv"></i> Exporter les statistiques (CSV)
+            </a>
+            <a href="{% url 'generer_rapport_pdf' %}" class="btn-export-pdf">
+                <i class="fas fa-file-pdf"></i> Générer le rapport (PDF)
+            </a>
+        </div>
+
+        <!-- STATS GLOBALES -->
+        <div class="stats-grid">
+            <div class="stat-card"><i class="fas fa-briefcase"></i><h3>Offres</h3><div class="stat-number">{{ total_offres|default:"0" }}</div></div>
+            <div class="stat-card"><i class="fas fa-users"></i><h3>Candidats</h3><div class="stat-number">{{ total_candidats|default:"0" }}</div></div>
+            <div class="stat-card"><i class="fas fa-building"></i><h3>Recruteurs</h3><div class="stat-number">{{ total_recruteurs|default:"0" }}</div></div>
+            <div class="stat-card"><i class="fas fa-file-alt"></i><h3>Candidatures</h3><div class="stat-number">{{ total_candidatures|default:"0" }}</div></div>
+            <div class="stat-card"><i class="fas fa-calendar-alt"></i><h3>Entretiens</h3><div class="stat-number">{{ total_entretiens|default:"0" }}</div></div>
+            <div class="stat-card"><i class="fas fa-comments"></i><h3>Messages</h3><div class="stat-number">{{ total_messages|default:"0" }}</div></div>
+        </div>
+
+        <!-- GRAPHIQUES -->
+        <div class="three-columns">
+            <div class="card">
+                <h3><i class="fas fa-chart-pie"></i> Répartition des candidatures</h3>
+                <canvas id="candidaturesChart"></canvas>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-chart-line"></i> Évolution des inscriptions</h3>
+                <canvas id="inscriptionsChart"></canvas>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-chart-bar"></i> Offres les plus populaires</h3>
+                <canvas id="offresChart"></canvas>
+            </div>
+        </div>
+
+        <!-- RÉPARTITION DES CANDIDATURES (texte) -->
         <div class="card">
-            <h2>🔥 Offres les plus populaires</h2>
-            {% if offres_populaires %}
-                <table>
-                    <thead>
-                        <tr><th>Titre</th><th>Candidatures</th><th>Lieu</th></tr>
-                    </thead>
-                    <tbody>
-                        {% for offre in offres_populaires %}
-                        <tr>
-                            <td>{{ offre.titre }}</td>
-                            <td><span class="badge-count">{{ offre.total_candidatures }}</span></td>
-                            <td>{{ offre.lieu }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>Aucune offre pour le moment.</p>
-            {% endif %}
+            <h2><i class="fas fa-chart-pie"></i> Répartition des candidatures</h2>
+            <div class="repartition-grid">
+                <div class="repartition-item"><span class="status-badge status-en_attente">⏳ En attente</span><div><strong>{{ candidatures_attente|default:"0" }}</strong></div></div>
+                <div class="repartition-item"><span class="status-badge status-acceptee">✅ Acceptées</span><div><strong>{{ candidatures_acceptees|default:"0" }}</strong></div></div>
+                <div class="repartition-item"><span class="status-badge status-rejetee">❌ Refusées</span><div><strong>{{ candidatures_refusees|default:"0" }}</strong></div></div>
+                <div class="repartition-item"><span class="status-badge status-entretien">📅 Entretien</span><div><strong>{{ candidatures_entretien|default:"0" }}</strong></div></div>
+            </div>
         </div>
 
-        <!-- Entretiens à venir -->
-        <div class="card">
-            <h2>📅 Entretiens à venir</h2>
-            {% if entretiens_a_venir %}
-                <table>
-                    <thead><tr><th>Candidat</th><th>Offre</th><th>Date</th><th>Lieu</th></tr></thead>
-                    <tbody>
-                        {% for e in entretiens_a_venir %}
-                        <tr>
-                            <td>{{ e.candidature.candidat.utilisateur.prenom }} {{ e.candidature.candidat.utilisateur.nom }}</td>
-                            <td>{{ e.candidature.offre.titre }}</td>
-                            <td>{{ e.date|date:"d/m/Y" }} à {{ e.heure }}</td>
-                            <td>{{ e.lieu }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>Aucun entretien programmé.</p>
-            {% endif %}
+        <!-- DEUX COLONNES -->
+        <div class="two-columns">
+            <div class="card">
+                <h2><i class="fas fa-fire"></i> Offres les plus populaires</h2>
+                <div class="table-container">
+                    {% if offres_populaires %}
+                    <table>
+                        <thead><tr><th>Titre</th><th>Candidatures</th><th>Lieu</th></tr></thead>
+                        <tbody>{% for offre in offres_populaires %}<tr><td>{{ offre.titre }}</td><td><span class="badge-count">{{ offre.total_candidatures }}</span></td><td>{{ offre.lieu }}</td></tr>{% endfor %}</tbody>
+                    </table>
+                    {% else %}<p style="text-align:center;color:#888;">Aucune offre pour le moment.</p>{% endif %}
+                </div>
+            </div>
+
+            <!-- ENTRETIENS À VENIR - RÉORGANISÉ -->
+            <div class="card">
+                <h2><i class="fas fa-calendar-alt"></i> Entretiens à venir</h2>
+                <div class="table-container">
+                    {% if entretiens_a_venir %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidat</th>
+                                <th>Offre</th>
+                                <th>Date</th>
+                                <th>Heure</th>
+                                <th>Lieu</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in entretiens_a_venir %}
+                            <tr>
+                                <td><strong>{{ e.candidature.candidat.utilisateur.prenom }} {{ e.candidature.candidat.utilisateur.nom }}</strong></td>
+                                <td>{{ e.candidature.offre.titre }}</td>
+                                <td>{{ e.date|date:"d/m/Y" }}</td>
+                                <td>{{ e.heure }}</td>
+                                <td><i class="fas fa-map-marker-alt" style="color:#1E3A5F; margin-right: 4px;"></i> {{ e.lieu|truncatechars:20 }}</td>
+                                <td>
+                                    {% if e.type == 'physique' %}
+                                        <span class="entretien-type type-physique">🏢 Physique</span>
+                                    {% elif e.type == 'visio' %}
+                                        <span class="entretien-type type-visio">🎥 Visio</span>
+                                    {% elif e.type == 'telephone' %}
+                                        <span class="entretien-type type-telephone">📞 Téléphone</span>
+                                    {% else %}
+                                        <span class="entretien-type">{{ e.type }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}<p style="text-align:center;color:#888;">Aucun entretien programmé.</p>{% endif %}
+                </div>
+            </div>
         </div>
+
+        <div class="two-columns">
+            <div class="card">
+                <h2><i class="fas fa-clock"></i> Dernières candidatures</h2>
+                <div class="table-container">
+                    {% if dernieres_candidatures %}
+                    <table>
+                        <thead><tr><th>Candidat</th><th>Offre</th><th>Date</th><th>Statut</th></tr></thead>
+                        <tbody>{% for c in dernieres_candidatures %}<tr><td>{{ c.candidat.utilisateur.prenom }} {{ c.candidat.utilisateur.nom }}</td><td>{{ c.offre.titre|truncatechars:20 }}</td><td>{{ c.datePostulation|date:"d/m/Y" }}</td><td><span class="status-badge status-{{ c.statut.nom }}">{{ c.statut.nom }}</span></td></tr>{% endfor %}</tbody>
+                    </table>
+                    {% else %}<p style="text-align:center;color:#888;">Aucune candidature récente.</p>{% endif %}
+                </div>
+            </div>
+            <div class="card">
+                <h2><i class="fas fa-user-plus"></i> Derniers inscrits</h2>
+                <div class="table-container">
+                    {% if derniers_utilisateurs %}
+                    <table>
+                        <thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Date</th></tr></thead>
+                        <tbody>{% for u in derniers_utilisateurs %}<tr><td>{{ u.prenom }} {{ u.nom }}</td><td>{{ u.email|truncatechars:20 }}</td><td>{% if u.role == 'candidat' %}👤 Candidat{% elif u.role == 'recruteur' %}🏢 Recruteur{% else %}👑 Admin{% endif %}</td><td>{{ u.dateCreation|date:"d/m/Y" }}</td></tr>{% endfor %}</tbody>
+                    </table>
+                    {% else %}<p style="text-align:center;color:#888;">Aucun utilisateur récent.</p>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note"><i class="fas fa-chart-line"></i> Interface de supervision – Données en temps réel</div>
     </div>
 
-    <!-- ==================== DERNIÈRES ACTIVITÉS ==================== -->
-    <div class="two-columns">
-        <!-- Dernières candidatures -->
-        <div class="card">
-            <h2>🕓 Dernières candidatures</h2>
-            {% if dernieres_candidatures %}
-                <table>
-                    <thead><tr><th>Candidat</th><th>Offre</th><th>Date</th><th>Statut</th></tr></thead>
-                    <tbody>
-                        {% for c in dernieres_candidatures %}
-                        <tr>
-                            <td>{{ c.candidat.utilisateur.prenom }} {{ c.candidat.utilisateur.nom }}</td>
-                            <td>{{ c.offre.titre }}</td>
-                            <td>{{ c.datePostulation|date:"d/m/Y" }}</td>
-                            <td><span class="statut-badge statut-{{ c.statut.nom }}">{{ c.statut.nom }}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>Aucune candidature récente.</p>
-            {% endif %}
-        </div>
+    <script>
+        // Graphique 1 : Répartition des candidatures
+        const ctx1 = document.getElementById('candidaturesChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: ['En attente', 'Acceptées', 'Refusées', 'Entretien'],
+                datasets: [{
+                    data: [
+                        {{ candidatures_attente|default:0 }},
+                        {{ candidatures_acceptees|default:0 }},
+                        {{ candidatures_refusees|default:0 }},
+                        {{ candidatures_entretien|default:0 }}
+                    ],
+                    backgroundColor: ['#FEF3C7', '#DCFCE7', '#FEE2E2', '#DBEAFE'],
+                    borderColor: ['#92400E', '#166534', '#991B1B', '#1E40AF'],
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
 
-        <!-- Derniers inscrits -->
-        <div class="card">
-            <h2>🆕 Derniers inscrits</h2>
-            {% if derniers_utilisateurs %}
-                <table>
-                    <thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Date</th></tr></thead>
-                    <tbody>
-                        {% for u in derniers_utilisateurs %}
-                        <tr>
-                            <td>{{ u.prenom }} {{ u.nom }}</td>
-                            <td>{{ u.email }}</td>
-                            <td>{{ u.role }}</td>
-                            <td>{{ u.dateCreation|date:"d/m/Y" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>Aucun utilisateur récent.</p>
-            {% endif %}
-        </div>
-    </div>
+        // Graphique 2 : Évolution des inscriptions
+        const ctx2 = document.getElementById('inscriptionsChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: {{ mois_labels|safe }},
+                datasets: [{
+                    label: 'Nouveaux utilisateurs',
+                    data: {{ inscriptions_data|safe }},
+                    borderColor: '#1E3A5F',
+                    backgroundColor: 'rgba(30,58,95,0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#1E3A5F',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
+        });
 
-    <hr>
-    <div class="footer-note">
-        📌 Interface de supervision – Données en temps réel
-    </div>
-</div>
+        // Graphique 3 : Offres populaires
+        const ctx3 = document.getElementById('offresChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: {{ offres_populaires_labels|safe }},
+                datasets: [{
+                    label: 'Nombre de candidatures',
+                    data: {{ offres_populaires_data|safe }},
+                    backgroundColor: '#1E3A5F',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: { y: { beginAtZero: true, grid: { color: '#EAEAEA' } }, x: { grid: { display: false } } }
+            }
+        });
+    </script>
 </body>
 </html>
