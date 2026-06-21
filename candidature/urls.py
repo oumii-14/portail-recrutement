@@ -13,7 +13,10 @@ urlpatterns = [
     path('offres/', views.liste_offres, name='liste_offres'),
     path('mes-offres/', views.mes_offres, name='mes_offres'),
     path('mes-candidatures/', views.mes_candidatures, name='mes_candidatures'),
+    path('commenter-candidature/<int:candidature_id>/', views.commenter_candidature, name='commenter_candidature'),
+    path('evaluer-candidature/<int:candidature_id>/', views.evaluer_candidature, name='evaluer_candidature'),
     path('notifications/', views.mes_notifications, name='mes_notifications'),
+    path('notifications/marquer-tout-lu/', views.marquer_tout_lu, name='marquer_tout_lu'),
     path('modifier-offre/<int:offre_id>/', views.modifier_offre, name='modifier_offre'),
     path('supprimer-offre/<int:offre_id>/', views.supprimer_offre, name='supprimer_offre'),
     path('postuler/<int:offre_id>/', views.postuler, name='postuler'),
@@ -26,6 +29,8 @@ urlpatterns = [
     path('envoyer-message/', views.envoyer_message, name='envoyer_message'),
     path('conversation/<int:utilisateur_id>/', views.conversation, name='conversation'),
     path('profil/', views.mon_profil, name='mon_profil'),
+    path('modifier-profil/', views.modifier_profil, name='modifier_profil'),
+    path('upload-photo/', views.upload_photo, name='upload_photo'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('alex-offre-ideale/', views.alex_offre_ideale, name='alex_offre_ideale'),
    path('alex-aide-offre/', views.alex_aide_offre, name='alex_aide_offre'),
@@ -37,7 +42,4 @@ path('export-statistiques/', views.export_statistiques, name='export_statistique
 path('generer-rapport/', views.generer_rapport_pdf, name='generer_rapport_pdf'),
 path('supprimer-document/<int:doc_id>/', views.supprimer_document, name='supprimer_document'),
 path('mes-documents/', views.mes_documents, name='mes_documents'),
-# Export et rapports
-path('export-statistiques/', views.export_statistiques, name='export_statistiques'),
-path('generer-rapport-pdf/', views.generer_rapport_pdf, name='generer_rapport_pdf'),
 ]

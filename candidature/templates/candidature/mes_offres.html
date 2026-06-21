@@ -1,341 +1,60 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes offres – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F5F7;
-            color: #1A1A1A;
-        }
-
-        /* HEADER */
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #EAEAEA;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .logo .blue {
-            background: linear-gradient(135deg, #0A2540, #1E3A5F);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #1E3A5F;
-        }
-
-        .logo .light {
-            color: #5F6F82;
-            font-weight: 500;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4A4A4A;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1E3A5F;
-        }
-
-        .nav-links .btn-logout {
-            background: #FEF2F2;
-            border: 1px solid #FEE2E2;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #DC2626;
-        }
-
-        .nav-links .btn-logout:hover {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 32px 40px;
-        }
-
-        /* PAGE HEADER */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111111;
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: #666666;
-            font-size: 14px;
-        }
-
-        .btn-create {
-            background: #1E3A5F;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-        }
-
-        .btn-create:hover {
-            background: #0A2540;
-            transform: translateY(-1px);
-        }
-
-        /* TABLE STYLE */
-        .table-container {
-            background: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #EAEAEA;
-            overflow-x: auto;
-            margin-bottom: 32px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 16px 20px;
-            background: #FAFAFA;
-            font-size: 12px;
-            font-weight: 600;
-            color: #888888;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #EAEAEA;
-        }
-
-        td {
-            padding: 16px 20px;
-            font-size: 14px;
-            color: #333333;
-            border-bottom: 1px solid #EAEAEA;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background: #FAFAFA;
-        }
-
-        /* BADGES */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .badge-cdi {
-            background: #DCFCE7;
-            color: #166534;
-        }
-
-        .badge-cdd {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-
-        .badge-stage {
-            background: #DBEAFE;
-            color: #1E40AF;
-        }
-
-        .badge-alternance {
-            background: #F3E8FF;
-            color: #6B21A5;
-        }
-
-        /* STATS CELL */
-        .stat-number {
-            font-weight: 700;
-            color: #1E3A5F;
-            font-size: 16px;
-        }
-
-        /* BUTTONS */
-        .btn-sm {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: 0.2s;
-            margin: 2px;
-        }
-
-        .btn-edit {
-            background: #EFF6FF;
-            color: #1E3A5F;
-        }
-
-        .btn-edit:hover {
-            background: #DBEAFE;
-        }
-
-        .btn-delete {
-            background: #FEF2F2;
-            color: #DC2626;
-        }
-
-        .btn-delete:hover {
-            background: #FEE2E2;
-        }
-
-        /* EMPTY STATE */
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-            background: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #EAEAEA;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            color: #CCCCCC;
-            margin-bottom: 16px;
-        }
-
-        .empty-state p {
-            color: #666666;
-            margin-bottom: 20px;
-        }
-
-        .empty-state .btn-create-empty {
-            background: #1E3A5F;
-            color: white;
-            padding: 10px 24px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #1E3A5F;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-            margin-top: 20px;
-        }
-
-        .back-link:hover {
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .container {
-                padding: 24px 20px;
-            }
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            th, td {
-                padding: 12px 16px;
-            }
-            .btn-sm {
-                padding: 4px 10px;
-                font-size: 11px;
-            }
-            .badge {
-                margin-left: 0;
-                margin-top: 6px;
-                display: inline-block;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <span class="blue">OBMI</span><span class="light">Recrutement</span>
-        </div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- PAGE HEADER -->
+{% extends 'candidature/base.html' %}
+{% block title %}Mes offres – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.container-wide { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 32px; }
+.page-header h1 { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; margin-bottom: 8px; }
+.page-header p { color: var(--text-secondary); font-size: 14px; }
+.btn-create { background: var(--primary); color: white; padding: 12px 24px; border-radius: 40px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; }
+.btn-create:hover { background: var(--navy); transform: translateY(-1px); }
+.table-container { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow-x: auto; margin-bottom: 32px; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 16px 20px; background: var(--bg); font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+td { padding: 16px 20px; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tr:hover { background: var(--bg); }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 30px; font-size: 11px; font-weight: 600; margin-left: 10px; }
+.badge-cdi { background: #DCFCE7; color: #166534; }
+.badge-cdd { background: #FEF3C7; color: #92400E; }
+.badge-stage { background: #DBEAFE; color: #1E40AF; }
+.badge-alternance { background: #F3E8FF; color: #6B21A5; }
+.stat-number { font-weight: 700; color: var(--primary); font-size: 16px; }
+.btn-sm { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 500; text-decoration: none; transition: 0.2s; margin: 2px; border: none; cursor: pointer; font-family: inherit; }
+.btn-edit { background: var(--light-blue); color: var(--primary); }
+.btn-edit:hover { background: #DBEAFE; }
+.btn-delete { background: #FEF2F2; color: #DC2626; }
+.btn-delete:hover { background: #FEE2E2; }
+.empty-state { text-align: center; padding: 60px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); }
+.empty-state i { font-size: 48px; color: var(--text-muted); margin-bottom: 16px; }
+.empty-state p { color: var(--text-secondary); margin-bottom: 20px; }
+.empty-state .btn-create-empty { background: var(--primary); color: white; padding: 10px 24px; border-radius: 40px; text-decoration: none; font-size: 14px; font-weight: 500; display: inline-block; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-box { background: var(--surface); border-radius: 20px; padding: 32px; max-width: 420px; width: 90%; text-align: center; animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-box .icon { font-size: 48px; margin-bottom: 12px; }
+.modal-box h2 { font-size: 20px; margin-bottom: 8px; color: var(--text); }
+.modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; }
+.modal-actions button { padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; font-family: inherit; }
+.btn-cancel-modal { background: var(--bg); color: var(--text); }
+.btn-cancel-modal:hover { background: var(--border); }
+.btn-confirm-delete { background: #DC2626; color: white; }
+.btn-confirm-delete:hover { background: #991B1B; }
+@media (max-width: 768px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    th, td { padding: 12px 16px; }
+    .badge { margin-left: 0; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-wide">
         <div class="page-header">
             <div>
-                <h1>📢 Mes offres</h1>
+                <h1>Mes offres</h1>
                 <p>Gérez toutes vos annonces publiées</p>
             </div>
             <a href="/creer-offre/" class="btn-create">
@@ -343,7 +62,6 @@
             </a>
         </div>
 
-        <!-- TABLEAU DES OFFRES -->
         {% if offres %}
         <div class="table-container">
             <table>
@@ -373,16 +91,16 @@
                             {% endif %}
                         </td>
                         <td>{{ offre.type_contrat }}</td>
-                        <td><i class="fas fa-map-marker-alt" style="color:#1E3A5F; margin-right: 6px;"></i> {{ offre.lieu }}</td>
+                        <td><i class="fas fa-map-marker-alt" style="color:var(--primary); margin-right: 6px;"></i> {{ offre.lieu }}</td>
                         <td>{{ offre.datePublication|date:"d/m/Y" }}</td>
                         <td><span class="stat-number">{{ offre.candidatures.count }}</span> candidature(s)</td>
                         <td>
                             <a href="/modifier-offre/{{ offre.id }}/" class="btn-sm btn-edit">
                                 <i class="fas fa-edit"></i> Modifier
                             </a>
-                            <a href="/supprimer-offre/{{ offre.id }}/" class="btn-sm btn-delete" onclick="return confirm('Supprimer cette offre ?')">
+                            <button type="button" class="btn-sm btn-delete" onclick="openDeleteModal({{ offre.id }}, '{{ offre.titre|escapejs }}')">
                                 <i class="fas fa-trash-alt"></i> Supprimer
-                            </a>
+                            </button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -396,12 +114,35 @@
             <a href="/creer-offre/" class="btn-create-empty">+ Créer ma première offre</a>
         </div>
         {% endif %}
-
-        <!-- BACK LINK -->
-        <a href="/dashboard/" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour au dashboard
-        </a>
     </div>
+</div>
 
-</body>
-</html>
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="icon">🗑️</div>
+        <h2>Confirmer la suppression</h2>
+        <p id="modalMessage">Voulez-vous vraiment supprimer cette offre ?</p>
+        <div class="modal-actions">
+            <button class="btn-cancel-modal" onclick="closeDeleteModal()">Annuler</button>
+            <form id="deleteForm" method="POST" style="display:inline">
+                {% csrf_token %}
+                <button class="btn-confirm-delete" type="submit">Oui, supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(offreId, offreTitre) {
+    document.getElementById('deleteModal').classList.add('active');
+    document.getElementById('modalMessage').textContent = 'Voulez-vous vraiment supprimer l\'offre "' + offreTitre + '" ?';
+    document.getElementById('deleteForm').action = '/supprimer-offre/' + offreId + '/';
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+}
+document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+</script>
+{% endblock %}

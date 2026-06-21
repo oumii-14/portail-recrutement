@@ -1,389 +1,156 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon profil – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F5F7;
-            color: #1A1A1A;
-        }
-
-        /* HEADER */
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #EAEAEA;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .logo .blue {
-            background: linear-gradient(135deg, #0A2540, #1E3A5F);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #1E3A5F;
-        }
-
-        .logo .light {
-            color: #5F6F82;
-            font-weight: 500;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4A4A4A;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1E3A5F;
-        }
-
-        .nav-links .btn-logout {
-            background: #FEF2F2;
-            border: 1px solid #FEE2E2;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #DC2626;
-        }
-
-        .nav-links .btn-logout:hover {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 32px 40px;
-        }
-
-        /* PROFILE CARD */
-        .profile-card {
-            background: #FFFFFF;
-            border-radius: 24px;
-            border: 1px solid #EAEAEA;
-            overflow: hidden;
-        }
-
-        /* PROFILE HEADER */
-        .profile-header {
-            background: linear-gradient(135deg, #1E3A5F 0%, #0A2540 100%);
-            padding: 32px;
-            text-align: center;
-            color: white;
-        }
-
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        .profile-avatar i {
-            font-size: 48px;
-            color: white;
-        }
-
-        .profile-header h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .profile-header .role-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* PROFILE INFO */
-        .profile-info {
-            padding: 28px;
-        }
-
-        .info-section {
-            margin-bottom: 24px;
-        }
-
-        .info-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #111111;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #EAEAEA;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .info-section h3 i {
-            color: #1E3A5F;
-        }
-
-        .info-row {
-            display: flex;
-            padding: 12px 0;
-            border-bottom: 1px solid #F0F0F0;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            width: 140px;
-            font-weight: 600;
-            color: #666666;
-            font-size: 14px;
-        }
-
-        .info-value {
-            flex: 1;
-            color: #111111;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* STATS GRID */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid #EAEAEA;
-        }
-
-        .stat-box {
-            text-align: center;
-            padding: 12px;
-            background: #FAFAFA;
-            border-radius: 16px;
-        }
-
-        .stat-box i {
-            font-size: 24px;
-            color: #1E3A5F;
-            margin-bottom: 8px;
-        }
-
-        .stat-box .stat-number {
-            font-size: 24px;
-            font-weight: 800;
-            color: #111111;
-        }
-
-        .stat-box .stat-label {
-            font-size: 11px;
-            color: #888888;
-            text-transform: uppercase;
-        }
-
-        /* BUTTONS */
-        .profile-actions {
-            display: flex;
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .btn-edit {
-            background: #1E3A5F;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-
-        .btn-edit:hover {
-            background: #0A2540;
-            transform: translateY(-1px);
-        }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #1E3A5F;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-            margin-top: 24px;
-        }
-
-        .back-link:hover {
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .container {
-                padding: 24px 20px;
-            }
-            .info-row {
-                flex-direction: column;
-                gap: 4px;
-            }
-            .info-label {
-                width: 100%;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            .profile-actions {
-                flex-direction: column;
-            }
-            .btn-edit {
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <span class="blue">OBMI</span><span class="light">Recrutement</span>
+{% extends 'candidature/base.html' %}
+{% block title %}Mon profil – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.container-narrow { max-width: 700px; margin: 0 auto; padding: 32px 24px; }
+.edit-banner { background: linear-gradient(135deg, var(--primary) 0%, var(--navy) 100%); border-radius: 24px; margin-bottom: 32px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.edit-banner.hidden { display: none; }
+.edit-banner-header { padding: 20px 28px; background: rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.edit-banner-header h3 { color: white; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+.close-banner { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 40px; font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+.close-banner:hover { background: rgba(255,255,255,0.3); }
+.edit-form-container { padding: 28px; }
+.edit-form-container .form-group { margin-bottom: 16px; }
+.edit-form-container label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.5px; }
+.edit-form-container input { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.25); border-radius: 12px; font-size: 14px; background: rgba(255,255,255,0.95); outline: none; }
+.edit-form-container input:focus { border-color: white; background: white; box-shadow: 0 0 0 3px rgba(255,255,255,0.3); }
+.edit-actions { display: flex; gap: 16px; margin-top: 28px; justify-content: flex-end; }
+.btn-save { background: #10B981; color: white; border: none; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-save:hover { background: #059669; transform: translateY(-1px); }
+.btn-cancel-edit { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-cancel-edit:hover { background: rgba(255,255,255,0.3); }
+.profile-card { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+.profile-header { background: linear-gradient(135deg, var(--primary) 0%, var(--navy) 100%); padding: 32px; text-align: center; color: white; }
+.profile-avatar { width: 100px; height: 100px; background: rgba(255,255,255,0.2); border-radius: 60px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.profile-avatar i { font-size: 48px; color: white; }
+.profile-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.profile-header .role-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 16px; border-radius: 40px; font-size: 12px; font-weight: 500; }
+.profile-info { padding: 28px; }
+.info-section { margin-bottom: 24px; }
+.info-section h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.info-section h3 i { color: var(--primary); }
+.info-row { display: flex; padding: 12px 0; border-bottom: 1px solid #F0F0F0; }
+.info-row:last-child { border-bottom: none; }
+.info-label { width: 140px; font-weight: 600; color: var(--text-secondary); font-size: 14px; flex-shrink: 0; }
+.info-value { flex: 1; color: var(--text); font-size: 14px; font-weight: 500; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+.stat-box { text-align: center; padding: 12px; background: var(--bg); border-radius: 16px; }
+.stat-box i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
+.stat-box .stat-number { font-size: 24px; font-weight: 800; color: var(--text); }
+.stat-box .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+.profile-actions { display: flex; gap: 16px; margin-top: 24px; }
+.btn-edit { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; cursor: pointer; }
+.btn-edit:hover { background: var(--navy); transform: translateY(-1px); }
+.btn-submit { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-submit:hover { background: var(--navy); }
+.btn-cancel { background: var(--bg); border: 1px solid var(--border); color: var(--text-secondary); padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-cancel:hover { background: #FEE2E2; color: #DC2626; }
+.toast-notification { position: fixed; bottom: 30px; right: 30px; background: #10B981; color: white; padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; z-index: 1000; transform: translateX(400px); transition: transform 0.3s ease; }
+.toast-notification.show { transform: translateX(0); }
+@media (max-width: 768px) {
+    .info-row { flex-direction: column; gap: 4px; }
+    .info-label { width: 100%; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .profile-actions { flex-direction: column; }
+    .btn-edit, .btn-submit, .btn-cancel { justify-content: center; }
+}
+</style>
+{% endblock %}
+{% block nav_extra %}{% if user.is_staff %}<a href="/admin-login/" class="nav-btn-admin"><i class="fas fa-shield-alt"></i> Administration</a>{% endif %}{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-narrow">
+        <div id="editBanner" class="edit-banner hidden">
+            <div class="edit-banner-header">
+                <h3><i class="fas fa-pen-alt"></i> Modification du profil</h3>
+                <button class="close-banner" onclick="hideEditBanner()"><i class="fas fa-times"></i> Fermer</button>
+            </div>
+            <div class="edit-form-container">
+                <form method="post" action="{% url 'modifier_profil' %}" id="editFormBanner">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" name="nom" id="bannerNom" value="{{ user.nom }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" id="bannerPrenom" value="{{ user.prenom }}" required>
+                    </div>
+                    {% if user.role == 'candidat' and candidat %}
+                    <div class="form-group"><label>Téléphone</label><input type="tel" name="telephone" id="bannerTelephone" value="{{ candidat.telephone }}"></div>
+                    <div class="form-group"><label>Date de naissance</label><input type="date" name="date_naissance" id="bannerDateNaissance" value="{{ candidat.date_naissance|date:'Y-m-d' }}"></div>
+                    <div class="form-group"><label>Ville</label><input type="text" name="ville" id="bannerVille" value="{{ candidat.ville }}"></div>
+                    {% endif %}
+                    {% if user.role == 'recruteur' and recruteur %}
+                    <div class="form-group"><label>Entreprise</label><input type="text" name="entreprise" id="bannerEntreprise" value="{{ recruteur.entreprise }}"></div>
+                    <div class="form-group"><label>Téléphone professionnel</label><input type="tel" name="telephone" id="bannerTelephonePro" value="{{ recruteur.telephone }}"></div>
+                    <div class="form-group"><label>Département</label><input type="text" name="departement" id="bannerDepartement" value="{{ recruteur.departement }}"></div>
+                    {% endif %}
+                    <div class="edit-actions">
+                        <button type="submit" class="btn-save">Enregistrer</button>
+                        <button type="button" class="btn-cancel-edit" onclick="hideEditBanner()">Annuler</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
-        </div>
-    </div>
 
-    <div class="container">
         <div class="profile-card">
-            <!-- EN-TÊTE PROFIL -->
             <div class="profile-header">
-                <div class="profile-avatar">
-                    <i class="fas fa-user-circle"></i>
+                <div class="profile-avatar" style="position:relative;">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" alt="Photo" style="width:100px;height:100px;border-radius:60px;object-fit:cover;">
+                    {% else %}
+                        <i class="fas fa-user-circle"></i>
+                    {% endif %}
+                    <form method="post" action="{% url 'upload_photo' %}" enctype="multipart/form-data" style="position:absolute;bottom:-8px;right:-8px;">
+                        {% csrf_token %}
+                        <label for="photoInputProfil" style="background:var(--primary);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid white;font-size:14px;"><i class="fas fa-camera"></i></label>
+                        <input type="file" name="photo" id="photoInputProfil" accept="image/*" style="display:none" onchange="this.form.submit()">
+                    </form>
                 </div>
                 <h2>{{ user.prenom }} {{ user.nom }}</h2>
-                <div class="role-badge">
-                    {% if user.role == 'candidat' %}
-                        👤 Candidat
-                    {% elif user.role == 'recruteur' %}
-                        🏢 Recruteur
-                    {% else %}
-                        👑 Administrateur
-                    {% endif %}
-                </div>
+                <div class="role-badge">{% if user.role == 'candidat' %}Candidat{% elif user.role == 'recruteur' %}Recruteur{% else %}Administrateur{% endif %}</div>
             </div>
-
-            <!-- INFORMATIONS PROFIL -->
             <div class="profile-info">
                 <div class="info-section">
-                    <h3>
-                        <i class="fas fa-address-card"></i>
-                        Informations personnelles
-                    </h3>
-                    <div class="info-row">
-                        <div class="info-label">Nom complet</div>
-                        <div class="info-value">{{ user.nom }} {{ user.prenom }}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Email</div>
-                        <div class="info-value">{{ user.email }}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Rôle</div>
-                        <div class="info-value">{{ user.role|title }}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Statut</div>
-                        <div class="info-value">{{ user.statut|default:"Actif" }}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Membre depuis</div>
-                        <div class="info-value">{{ user.dateCreation|date:"d F Y" }}</div>
-                    </div>
+                    <h3><i class="fas fa-address-card"></i> Mon profil</h3>
+                    <div class="info-row"><div class="info-label">Nom complet</div><div class="info-value">{{ user.nom }} {{ user.prenom }}</div></div>
+                    <div class="info-row"><div class="info-label">Email</div><div class="info-value">{{ user.email }}</div></div>
+                    {% if user.role == 'candidat' and candidat %}
+                    <div class="info-row"><div class="info-label">Téléphone</div><div class="info-value">{{ candidat.telephone|default:"Non renseigné" }}</div></div>
+                    <div class="info-row"><div class="info-label">Date de naissance</div><div class="info-value">{{ candidat.date_naissance|date:"d/m/Y"|default:"Non renseignée" }}</div></div>
+                    <div class="info-row"><div class="info-label">Ville</div><div class="info-value">{{ candidat.ville|default:"Non renseignée" }}</div></div>
+                    {% endif %}
+                    {% if user.role == 'recruteur' and recruteur %}
+                    <div class="info-row"><div class="info-label">Entreprise</div><div class="info-value">{{ recruteur.entreprise|default:"Non renseignée" }}</div></div>
+                    <div class="info-row"><div class="info-label">Téléphone pro</div><div class="info-value">{{ recruteur.telephone|default:"Non renseigné" }}</div></div>
+                    <div class="info-row"><div class="info-label">Département</div><div class="info-value">{{ recruteur.departement|default:"Non renseigné" }}</div></div>
+                    {% endif %}
+                    <div class="info-row"><div class="info-label">Rôle</div><div class="info-value">{{ user.role|title }}</div></div>
+                    <div class="info-row"><div class="info-label">Membre depuis</div><div class="info-value">{{ user.dateCreation|date:"d F Y" }}</div></div>
                 </div>
-
-                <!-- STATISTIQUES (si candidat ou recruteur) -->
                 <div class="stats-grid">
-                    <div class="stat-box">
-                        <i class="fas fa-calendar-alt"></i>
-                        <div class="stat-number">{{ user.dateCreation|date:"Y" }}</div>
-                        <div class="stat-label">Année d'inscription</div>
-                    </div>
-                    <div class="stat-box">
-                        <i class="fas fa-clock"></i>
-                        <div class="stat-number">{% now "Y" %}</div>
-                        <div class="stat-label">Année en cours</div>
-                    </div>
-                    <div class="stat-box">
-                        <i class="fas fa-id-card"></i>
-                        <div class="stat-number">#{{ user.id }}</div>
-                        <div class="stat-label">ID Utilisateur</div>
-                    </div>
+                    <div class="stat-box"><i class="fas fa-calendar-alt"></i><div class="stat-number">{{ user.dateCreation|date:"Y" }}</div><div class="stat-label">Année d'inscription</div></div>
+                    <div class="stat-box"><i class="fas fa-clock"></i><div class="stat-number">{% now "Y" %}</div><div class="stat-label">Année en cours</div></div>
+                    <div class="stat-box"><i class="fas fa-id-card"></i><div class="stat-number">#{{ user.id }}</div><div class="stat-label">ID Utilisateur</div></div>
                 </div>
-
-               
+                <div class="profile-actions">
+                    <button class="btn-edit" onclick="showEditBanner()"><i class="fas fa-edit"></i> Modifier mon profil</button>
+                </div>
             </div>
         </div>
-
-        <!-- BACK LINK -->
-        <a href="/dashboard/" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour au dashboard
-        </a>
     </div>
+</div>
 
-</body>
-</html>
+<div id="toastMessage" class="toast-notification">
+    <i class="fas fa-check-circle"></i>
+    <span>Profil mis à jour avec succès</span>
+</div>
+
+<script>
+function toggleEditForm() { var form = document.getElementById('editForm'); if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none'; }
+function showEditBanner() { var b = document.getElementById('editBanner'); b.classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function hideEditBanner() { document.getElementById('editBanner').classList.add('hidden'); }
+document.getElementById('editFormBanner')?.addEventListener('submit', function(e) { var t = document.getElementById('toastMessage'); t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 2000); });
+</script>
+{% endblock %}

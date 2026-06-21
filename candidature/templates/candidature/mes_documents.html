@@ -1,64 +1,52 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes documents – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #F5F5F7; color: #1A1A1A; }
-        .header { background: #FFFFFF; border-bottom: 1px solid #EAEAEA; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .logo { font-size: 20px; font-weight: 800; }
-        .logo .blue { background: linear-gradient(135deg, #0A2540, #1E3A5F); -webkit-background-clip: text; background-clip: text; color: #1E3A5F; }
-        .logo .light { color: #5F6F82; font-weight: 500; }
-        .nav-links { display: flex; gap: 24px; align-items: center; }
-        .nav-links a { text-decoration: none; color: #4A4A4A; font-size: 14px; font-weight: 500; transition: 0.2s; }
-        .nav-links a:hover { color: #1E3A5F; }
-        .container { max-width: 900px; margin: 0 auto; padding: 32px 40px; }
-        .page-header { margin-bottom: 28px; }
-        .page-header h1 { font-size: 28px; font-weight: 700; color: #111111; }
-        .card { background: #FFFFFF; border-radius: 20px; border: 1px solid #EAEAEA; padding: 20px 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; transition: 0.2s; }
-        .card:hover { transform: translateY(-2px); border-color: #BFDBFE; }
-        .doc-info { display: flex; align-items: center; gap: 16px; }
-        .doc-info i { font-size: 36px; color: #1E3A5F; }
-        .doc-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-        .doc-info p { font-size: 12px; color: #888; }
-        .btn { padding: 8px 18px; border-radius: 30px; text-decoration: none; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; cursor: pointer; border: none; }
-        .btn-view { background: #EFF6FF; color: #1E3A5F; }
-        .btn-view:hover { background: #DBEAFE; }
-        .btn-delete { background: #FEF2F2; color: #DC2626; }
-        .btn-delete:hover { background: #FEE2E2; }
-        .empty-state { text-align: center; padding: 60px; background: white; border-radius: 20px; border: 1px solid #EAEAEA; }
-        .empty-state i { font-size: 48px; color: #CCC; margin-bottom: 16px; }
-        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #1E3A5F; text-decoration: none; margin-top: 24px; }
-        .back-link:hover { gap: 12px; }
-        @media (max-width: 768px) {
-            .header { padding: 16px 20px; flex-direction: column; align-items: flex-start; }
-            .container { padding: 24px 20px; }
-            .card { flex-direction: column; align-items: flex-start; }
-            .page-header { flex-direction: column; align-items: flex-start; }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div class="logo"><span class="blue">OBMI</span><span class="light">Recrutement</span></div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/">Déconnexion</a>
-        </div>
-    </div>
-    <div class="container">
+{% extends 'candidature/base.html' %}
+{% block title %}Mes documents – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.container-narrow { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+.page-header { margin-bottom: 28px; }
+.page-header h1 { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; }
+.doc-card { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; transition: 0.2s; }
+.doc-card:hover { transform: translateY(-2px); border-color: #BFDBFE; }
+.doc-info { display: flex; align-items: center; gap: 16px; }
+.doc-info i { font-size: 36px; color: var(--primary); }
+.doc-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.doc-info p { font-size: 12px; color: var(--text-muted); }
+.btn { padding: 8px 18px; border-radius: 30px; text-decoration: none; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; cursor: pointer; border: none; font-family: inherit; }
+.btn-view { background: var(--light-blue); color: var(--primary); }
+.btn-view:hover { background: #DBEAFE; }
+.btn-delete { background: #FEF2F2; color: #DC2626; }
+.btn-delete:hover { background: #FEE2E2; }
+.empty-state { text-align: center; padding: 60px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); }
+.empty-state i { font-size: 48px; color: var(--text-muted); margin-bottom: 16px; }
+.empty-state p { color: var(--text-secondary); }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-box { background: var(--surface); border-radius: 20px; padding: 32px; max-width: 420px; width: 90%; text-align: center; animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-box .icon { font-size: 48px; margin-bottom: 12px; }
+.modal-box h2 { font-size: 20px; margin-bottom: 8px; color: var(--text); }
+.modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; }
+.modal-actions button { padding: 12px 24px; border-radius: 40px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; font-family: inherit; }
+.btn-cancel-modal { background: var(--bg); color: var(--text); }
+.btn-cancel-modal:hover { background: var(--border); }
+.btn-confirm-delete { background: #DC2626; color: white; }
+.btn-confirm-delete:hover { background: #991B1B; }
+@media (max-width: 768px) {
+    .doc-card { flex-direction: column; align-items: flex-start; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-narrow">
         <div class="page-header">
             <h1><i class="fas fa-folder-open"></i> Mes documents</h1>
         </div>
-        
+
         {% if documents %}
             {% for doc in documents %}
-            <div class="card">
+            <div class="doc-card">
                 <div class="doc-info">
                     {% if doc.type == 'cv' %}
                         <i class="fas fa-file-pdf"></i>
@@ -69,7 +57,7 @@
                         <h3>{% if doc.type == 'cv' %}CV{% else %}Lettre de motivation{% endif %}</h3>
                         <p>Ajouté le {{ doc.date_upload|date:"d/m/Y à H:i" }}</p>
                         {% if doc.contenu and doc.type == 'lettre_motivation' %}
-                            <p style="font-size: 11px; color: #666; margin-top: 4px;">{{ doc.contenu|truncatechars:80 }}</p>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">{{ doc.contenu|truncatechars:80 }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -80,7 +68,7 @@
                     {% if doc.type == 'lettre_motivation' and doc.contenu %}
                     <button class="btn btn-view" onclick="alert('{{ doc.contenu|escapejs }}')"><i class="fas fa-eye"></i> Lire</button>
                     {% endif %}
-                    <a href="{% url 'supprimer_document' doc.id %}" class="btn btn-delete" onclick="return confirm('Supprimer ce document ?')"><i class="fas fa-trash-alt"></i> Supprimer</a>
+                    <button class="btn btn-delete" onclick="openDeleteModal({{ doc.id }}, '{{ doc.get_type_display|escapejs }}')"><i class="fas fa-trash-alt"></i> Supprimer</button>
                 </div>
             </div>
             {% endfor %}
@@ -91,8 +79,35 @@
             <p style="font-size: 13px; margin-top: 8px;">Les documents seront ajoutés automatiquement lors de vos candidatures</p>
         </div>
         {% endif %}
-        
-        <a href="/dashboard/" class="back-link"><i class="fas fa-arrow-left"></i> Retour au dashboard</a>
     </div>
-</body>
-</html>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="icon">🗑️</div>
+        <h2>Confirmer la suppression</h2>
+        <p id="modalMessage">Voulez-vous vraiment supprimer ce document ?</p>
+        <div class="modal-actions">
+            <button class="btn-cancel-modal" onclick="closeDeleteModal()">Annuler</button>
+            <form id="deleteForm" method="POST" style="display:inline">
+                {% csrf_token %}
+                <button class="btn-confirm-delete" type="submit">Oui, supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(docId, docType) {
+    document.getElementById('deleteModal').classList.add('active');
+    document.getElementById('modalMessage').textContent = 'Voulez-vous vraiment supprimer ce document "' + docType + '" ?';
+    document.getElementById('deleteForm').action = '/supprimer-document/' + docId + '/';
+}
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+}
+document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+</script>
+{% endblock %}

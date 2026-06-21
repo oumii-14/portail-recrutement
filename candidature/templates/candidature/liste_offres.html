@@ -1,414 +1,181 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorer les offres – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F5F7;
-            color: #1A1A1A;
-        }
-
-        /* HEADER */
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #EAEAEA;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .logo .blue {
-            background: linear-gradient(135deg, #0A2540, #1E3A5F);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #1E3A5F;
-        }
-
-        .logo .light {
-            color: #5F6F82;
-            font-weight: 500;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4A4A4A;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1E3A5F;
-        }
-
-        .nav-links .btn-logout {
-            background: #FEF2F2;
-            border: 1px solid #FEE2E2;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #DC2626;
-        }
-
-        .nav-links .btn-logout:hover {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 32px 40px;
-        }
-
-        /* PAGE TITLE */
-        .page-header {
-            margin-bottom: 32px;
-        }
-
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111111;
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: #666666;
-            font-size: 14px;
-        }
-
-        /* SEARCH BAR */
-        .search-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 20px 24px;
-            margin-bottom: 32px;
-            border: 1px solid #EAEAEA;
-        }
-
-        .search-form {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #EAEAEA;
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            transition: 0.2s;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #1E3A5F;
-        }
-
-        .search-btn {
-            background: #1E3A5F;
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .search-btn:hover {
-            background: #0A2540;
-        }
-
-        .clear-btn {
-            background: #F5F5F5;
-            color: #DC2626;
-            border: 1px solid #EAEAEA;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .clear-btn:hover {
-            background: #FEF2F2;
-            border-color: #FECACA;
-        }
-
-        /* OFFERS GRID */
-        .offers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .offre-card {
-            background: #FFFFFF;
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid #EAEAEA;
-            transition: all 0.2s ease;
-        }
-
-        .offre-card:hover {
-            transform: translateY(-3px);
-            border-color: #BFDBFE;
-            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .card-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111111;
-        }
-
-        .badge {
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-cdi {
-            background: #DCFCE7;
-            color: #166534;
-        }
-
-        .badge-cdd {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-
-        .badge-stage {
-            background: #DBEAFE;
-            color: #1E40AF;
-        }
-
-        .badge-alternance {
-            background: #F3E8FF;
-            color: #6B21A5;
-        }
-
-        .offre-lieu {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #666666;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        .offre-lieu i {
-            width: 16px;
-            font-size: 12px;
-            color: #1E3A5F;
-        }
-
-        .offre-description {
-            color: #555555;
-            font-size: 13px;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .offre-date {
-            font-size: 11px;
-            color: #999999;
-            margin-bottom: 16px;
-        }
-
-        .offre-expiration {
-            font-size: 11px;
-            color: #DC2626;
-            margin-bottom: 16px;
-        }
-
-        .btn-postuler {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #1E3A5F;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .btn-postuler:hover {
-            background: #0A2540;
-            transform: translateY(-1px);
-        }
-
-        /* EMPTY STATE */
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-            background: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #EAEAEA;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            color: #CCCCCC;
-            margin-bottom: 16px;
-        }
-
-        .empty-state p {
-            color: #666666;
-        }
-
-        /* BACK BUTTON */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #1E3A5F;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            margin-top: 20px;
-            transition: 0.2s;
-        }
-
-        .back-link:hover {
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .container {
-                padding: 24px 20px;
-            }
-            .offers-grid {
-                grid-template-columns: 1fr;
-            }
-            .search-form {
-                flex-direction: column;
-            }
-            .search-btn, .clear-btn {
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <span class="blue">OBMI</span><span class="light">Recrutement</span>
+{% extends 'candidature/base.html' %}
+{% block title %}Explorer les offres – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.page-header { margin-bottom: 32px; }
+.page-header h1 { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; margin-bottom: 8px; }
+.page-header p { color: var(--text-secondary); font-size: 14px; }
+.search-card { background: var(--surface); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; border: 1px solid var(--border); }
+.search-form { display: flex; gap: 12px; flex-wrap: wrap; }
+.search-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-family: inherit; outline: none; transition: 0.2s; }
+.search-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--light-blue); }
+.search-btn { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; }
+.search-btn:hover { background: var(--navy); }
+.clear-btn { background: var(--bg); color: #DC2626; border: 1px solid var(--border); padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; text-decoration: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+.clear-btn:hover { background: #FEF2F2; border-color: #FECACA; }
+.offers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; margin-bottom: 32px; }
+.offre-card { background: var(--surface); border-radius: 20px; padding: 24px; border: 1px solid var(--border); transition: all 0.2s ease; }
+.offre-card:hover { transform: translateY(-3px); border-color: #BFDBFE; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1); }
+.offre-card.expiree { background: #F9FAFB; opacity: 0.8; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.card-header h3 { font-size: 18px; font-weight: 700; color: var(--text); }
+.badge-cdi { background: #DCFCE7; color: #166534; }
+.badge-cdd { background: #FEF3C7; color: #92400E; }
+.badge-stage { background: #DBEAFE; color: #1E40AF; }
+.badge-alternance { background: #F3E8FF; color: #6B21A5; }
+.badge-expiree { background: #FEE2E2; color: #991B1B; }
+.offre-lieu { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 13px; margin-bottom: 12px; }
+.offre-lieu i { width: 16px; font-size: 12px; color: var(--primary); }
+.offre-description { color: var(--text-secondary); font-size: 13px; line-height: 1.5; margin-bottom: 16px; }
+.offre-date { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.offre-expiration { font-size: 11px; color: #DC2626; margin-bottom: 16px; }
+.message-expiration { background: #FEF2F2; border-left: 3px solid #DC2626; padding: 8px 12px; border-radius: 8px; margin: 12px 0; font-size: 12px; }
+.message-expiration i { color: #DC2626; margin-right: 6px; }
+.message-expiration strong { color: #991B1B; }
+.message-urgent { background: #FEF3C7; border-left: 3px solid #F59E0B; padding: 8px 12px; border-radius: 8px; margin: 12px 0; font-size: 12px; color: #92400E; }
+.btn-postuler { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; padding: 10px 20px; border-radius: 40px; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; border: none; cursor: pointer; }
+.btn-postuler:hover { background: var(--navy); transform: translateY(-1px); }
+.btn-postuler.disabled { background: #D1D5DB; cursor: not-allowed; opacity: 0.6; }
+.btn-postuler.disabled:hover { background: #D1D5DB; transform: none; }
+.btn-postuler.already-applied { background: #D1FAE5; color: #065F46; cursor: default; pointer-events: none; }
+.empty-state { text-align: center; padding: 60px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); }
+.empty-state i { font-size: 48px; color: var(--text-muted); margin-bottom: 16px; }
+.empty-state p { color: var(--text-secondary); }
+.pagination { display: flex; justify-content: center; gap: 8px; margin: 32px 0; }
+.page-link { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--primary); text-decoration: none; font-size: 14px; font-weight: 500; transition: 0.2s; }
+.page-link:hover { background: var(--primary); color: white; }
+.page-link.active { background: var(--primary); color: white; border-color: var(--primary); }
+.messages { margin-bottom: 0; }
+.message-success { background: #D1FAE5; border: 1px solid #A7F3D0; color: #065F46; padding: 12px 20px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 20px; transition: 0.2s; }
+.back-link:hover { gap: 12px; }
+@media (max-width: 768px) {
+    .container { padding: 24px 20px; }
+    .offers-grid { grid-template-columns: 1fr; }
+    .search-form { flex-direction: column; }
+    .search-btn, .clear-btn { text-align: center; justify-content: center; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-content">
+    {% if messages %}
+    <div class="container messages">
+        {% for message in messages %}
+        <div class="message-success">
+            <i class="fas fa-check-circle"></i> {{ message }}
         </div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/offres/" class="btn-logout">🚪 Déconnexion</a>
-        </div>
+        {% endfor %}
     </div>
+    {% endif %}
 
     <div class="container">
-        <!-- PAGE TITLE -->
         <div class="page-header">
-            <h1>📢 Explorer les offres</h1>
+            <h1>Explorer les offres</h1>
             <p>Découvrez toutes les opportunités disponibles</p>
         </div>
 
-        <!-- SEARCH BAR -->
         <div class="search-card">
             <form method="get" class="search-form">
                 <input type="text" name="q" class="search-input" placeholder="Rechercher par titre, lieu ou compétence..." value="{{ query }}">
-                <button type="submit" class="search-btn">🔍 Rechercher</button>
-                {% if query %}
-                    <a href="?" class="clear-btn">✖ Effacer</a>
+                <select name="type_contrat" class="search-input" style="max-width:180px;" onchange="this.form.submit()">
+                    <option value="">Tous contrats</option>
+                    <option value="CDI" {% if type_contrat == 'CDI' %}selected{% endif %}>CDI</option>
+                    <option value="CDD" {% if type_contrat == 'CDD' %}selected{% endif %}>CDD</option>
+                    <option value="Stage" {% if type_contrat == 'Stage' %}selected{% endif %}>Stage</option>
+                    <option value="Alternance" {% if type_contrat == 'Alternance' %}selected{% endif %}>Alternance</option>
+                </select>
+                <select name="lieu" class="search-input" style="max-width:200px;" onchange="this.form.submit()">
+                    <option value="">Tous lieux</option>
+                    {% for l in lieux_disponibles %}
+                    <option value="{{ l }}" {% if lieu == l %}selected{% endif %}>{{ l }}</option>
+                    {% endfor %}
+                </select>
+                <select name="sort" class="search-input" style="max-width:180px;" onchange="this.form.submit()">
+                    <option value="" {% if not sort %}selected{% endif %}>Trier par</option>
+                    <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Plus récentes</option>
+                    <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Plus anciennes</option>
+                    <option value="titre" {% if sort == 'titre' %}selected{% endif %}>Titre A-Z</option>
+                    <option value="expiration" {% if sort == 'expiration' %}selected{% endif %}>Expiration</option>
+                </select>
+                <button type="submit" class="search-btn"><i class="fas fa-search"></i> Rechercher</button>
+                {% if query or type_contrat or lieu or sort %}
+                    <a href="?" class="clear-btn"><i class="fas fa-times"></i> Effacer</a>
                 {% endif %}
             </form>
         </div>
 
-        <!-- OFFERS GRID -->
         {% if offres %}
             <div class="offers-grid">
                 {% for offre in offres %}
-                <div class="offre-card">
-                    <div class="card-header">
-                        <h3>{{ offre.titre }}</h3>
-                        {% if offre.type_contrat == 'CDI' %}
-                            <span class="badge badge-cdi">CDI</span>
-                        {% elif offre.type_contrat == 'CDD' %}
-                            <span class="badge badge-cdd">CDD</span>
-                        {% elif offre.type_contrat == 'Stage' %}
-                            <span class="badge badge-stage">Stage</span>
-                        {% elif offre.type_contrat == 'Alternance' %}
-                            <span class="badge badge-alternance">Alternance</span>
-                        {% endif %}
-                    </div>
-                    <div class="offre-lieu">
-                        <i class="fas fa-map-marker-alt"></i> {{ offre.lieu }}
-                    </div>
-                    <div class="offre-description">
-                        {{ offre.description|truncatewords:25 }}
-                    </div>
-                    <div class="offre-date">
-                        <i class="far fa-calendar-alt"></i> Publiée le {{ offre.datePublication|date:"d/m/Y" }}
-                    </div>
-                    {% if offre.date_expiration %}
-                        <div class="offre-expiration">
-                            ⚠️ Expire le {{ offre.date_expiration|date:"d/m/Y" }}
+                    {% if offre.est_expiree %}
+                        <div class="offre-card expiree">
+                            <div class="card-header">
+                                <h3>{{ offre.titre }}</h3>
+                                <span class="badge badge-expiree">Expirée</span>
+                            </div>
+                            <div class="offre-lieu">
+                                <i class="fas fa-map-marker-alt"></i> {{ offre.lieu }}
+                            </div>
+                            <div class="offre-description">
+                                {{ offre.description|truncatewords:25 }}
+                            </div>
+                            <div class="offre-date">
+                                <i class="far fa-calendar-alt"></i> Publiée le {{ offre.datePublication|date:"d/m/Y" }}
+                            </div>
+                            <div class="message-expiration">
+                                <i class="fas fa-calendar-times"></i>
+                                <strong>Offre expirée</strong> - Date limite dépassée le {{ offre.date_expiration|date:"d/m/Y" }}
+                            </div>
+                            <button class="btn-postuler disabled" disabled>
+                                <i class="fas fa-lock"></i> Offre expirée
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="offre-card">
+                            <div class="card-header">
+                                <h3>{{ offre.titre }}</h3>
+                                {% if offre.type_contrat == 'CDI' %}
+                                    <span class="badge badge-cdi">CDI</span>
+                                {% elif offre.type_contrat == 'CDD' %}
+                                    <span class="badge badge-cdd">CDD</span>
+                                {% elif offre.type_contrat == 'Stage' %}
+                                    <span class="badge badge-stage">Stage</span>
+                                {% elif offre.type_contrat == 'Alternance' %}
+                                    <span class="badge badge-alternance">Alternance</span>
+                                {% else %}
+                                    <span class="badge badge-cdd">{{ offre.type_contrat }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="offre-lieu">
+                                <i class="fas fa-map-marker-alt"></i> {{ offre.lieu }}
+                            </div>
+                            <div class="offre-description">
+                                {{ offre.description|truncatewords:25 }}
+                            </div>
+                            <div class="offre-date">
+                                <i class="far fa-calendar-alt"></i> Publiée le {{ offre.datePublication|date:"d/m/Y" }}
+                            </div>
+                            {% if offre.jours_restants <= 3 %}
+                            <div class="message-urgent">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Plus que {{ offre.jours_restants }} jour(s) pour postuler !
+                            </div>
+                            {% endif %}
+                            <div class="offre-expiration">
+                                <i class="fas fa-clock"></i> Expire le {{ offre.date_expiration|date:"d/m/Y" }}
+                            </div>
+                            {% if offre.id in applied_offre_ids %}
+                                <span class="btn-postuler already-applied">
+                                    <i class="fas fa-check-circle"></i> Déjà postulé
+                                </span>
+                            {% else %}
+                            <a href="/postuler/{{ offre.id }}/" class="btn-postuler">
+                                Postuler <i class="fas fa-arrow-right"></i>
+                            </a>
+                            {% endif %}
                         </div>
                     {% endif %}
-                    <a href="/postuler/{{ offre.id }}/" class="btn-postuler">
-                        Postuler <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
                 {% endfor %}
             </div>
         {% else %}
@@ -418,11 +185,25 @@
             </div>
         {% endif %}
 
-        <!-- BACK LINK -->
-        <a href="/dashboard/" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour au dashboard
-        </a>
+        {% if offres.has_other_pages %}
+        <div class="pagination">
+            {% if offres.has_previous %}
+                <a href="?page=1{% if query %}&q={{ query }}{% endif %}{% if type_contrat %}&type_contrat={{ type_contrat }}{% endif %}{% if lieu %}&lieu={{ lieu }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">&laquo;</a>
+                <a href="?page={{ offres.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if type_contrat %}&type_contrat={{ type_contrat }}{% endif %}{% if lieu %}&lieu={{ lieu }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">&lsaquo;</a>
+            {% endif %}
+            {% for num in offres.paginator.page_range %}
+                {% if offres.number == num %}
+                    <span class="page-link active">{{ num }}</span>
+                {% elif num > offres.number|add:'-3' and num < offres.number|add:'3' %}
+                    <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if type_contrat %}&type_contrat={{ type_contrat }}{% endif %}{% if lieu %}&lieu={{ lieu }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if offres.has_next %}
+                <a href="?page={{ offres.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if type_contrat %}&type_contrat={{ type_contrat }}{% endif %}{% if lieu %}&lieu={{ lieu }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">&rsaquo;</a>
+                <a href="?page={{ offres.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if type_contrat %}&type_contrat={{ type_contrat }}{% endif %}{% if lieu %}&lieu={{ lieu }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">&raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

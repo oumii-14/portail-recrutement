@@ -230,6 +230,20 @@
             color: #1E40AF;
         }
 
+        .rating-stars i {
+            font-size: 16px;
+            margin: 0 2px;
+            cursor: pointer;
+            color: #FBBF24;
+        }
+        .rating-stars i:hover {
+            transform: scale(1.1);
+        }
+        .rating-display i {
+            font-size: 14px;
+            color: #FBBF24;
+        }
+
         .btn-sm {
             display: inline-flex;
             align-items: center;
@@ -290,6 +304,86 @@
             background: #FECACA;
         }
 
+        .comment-input textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #EAEAEA;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            resize: vertical;
+        }
+        .comment-input textarea:focus {
+            outline: none;
+            border-color: #1E3A5F;
+        }
+        .btn-save-comment {
+            background: #1E3A5F;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 6px;
+            transition: 0.2s;
+        }
+        .btn-save-comment:hover {
+            background: #0A2540;
+        }
+        .comment-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #EAEAEA;
+        }
+        .comment-text {
+            font-size: 12px;
+            color: #555;
+            background: #FAFAFA;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .btn-edit-comment {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1E3A5F;
+        }
+        .btn-edit-comment:hover {
+            color: #0A2540;
+        }
+        .actions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .actions-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .rating-comment-area {
+            background: #FAFAFA;
+            padding: 10px;
+            border-radius: 16px;
+            margin-top: 8px;
+        }
+        .rating-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .rating-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+        }
+
         .text-muted {
             color: #999;
             font-size: 12px;
@@ -328,7 +422,6 @@
             gap: 12px;
         }
 
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -404,6 +497,9 @@
                 padding: 4px 10px;
                 font-size: 11px;
             }
+            .actions-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -416,14 +512,14 @@
         <div class="nav-links">
             <a href="/">Accueil</a>
             <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
+            <a href="/deconnexion/" class="btn-logout"> Déconnexion</a>
         </div>
     </div>
 
     <div class="container">
         <div class="page-header">
             <h1>📄 Candidatures reçues</h1>
-            <p>Consultez les CV, lettres de motivation, planifiez des entretiens, acceptez ou rejetez</p>
+            <p>Consultez les CV, lettres de motivation, notez, commentez, planifiez des entretiens, acceptez ou rejetez</p>
         </div>
 
         <div class="filter-card">
@@ -462,49 +558,100 @@
                     <tr>
                         <td>
                             <strong>{{ c.candidat.utilisateur.prenom }} {{ c.candidat.utilisateur.nom }}</strong>
+                            {% if c.candidat.ville %}
+                                <br><span style="font-size: 11px; color: #888;">📍 {{ c.candidat.ville }}</span>
+                            {% endif %}
                         </td>
-                        <td>{{ c.offre.titre }}</td>
+                        <td>{{ c.offre.titre }}
+                            {% if c.offre.lieu %}
+                                <br><span style="font-size: 11px; color: #888;">{{ c.offre.lieu }}</span>
+                            {% endif %}
+                        </td>
                         <td>{{ c.datePostulation|date:"d/m/Y" }}</td>
                         <td>
                             <span class="status-badge status-{{ c.statut.nom }}">
                                 {{ c.statut.nom }}
                             </span>
                         </td>
-                        <td>
-                            <!-- 1. VOIR CV -->
-                            {% with doc=c.candidat.documents.first %}
-                                {% if doc and doc.fichier %}
-                                    <a href="{{ doc.fichier.url }}" target="_blank" class="btn-sm btn-cv">
-                                        <i class="fas fa-file-pdf"></i> Voir CV
+                        <td class="actions-cell">
+                            <div class="actions-container">
+                                <!-- Boutons d'action -->
+                                <div class="actions-buttons">
+                                    <!-- CV -->
+                                    {% with doc=c.candidat.documents.first %}
+                                        {% if doc and doc.fichier %}
+                                            <a href="{{ doc.fichier.url }}" target="_blank" class="btn-sm btn-cv">
+                                                <i class="fas fa-file-pdf"></i> CV
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted"><i class="fas fa-file"></i> CV</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                    
+                                    <!-- LETTRE DE MOTIVATION (maintenant dans candidature) -->
+                                    {% if c.lettre_motivation %}
+                                        <button class="btn-sm btn-lettre" onclick="showLettreMotivation('{{ c.lettre_motivation|escapejs }}')">
+                                            <i class="fas fa-envelope-open-text"></i> Lettre
+                                        </button>
+                                    {% endif %}
+                                    
+                                    <!-- Planifier entretien -->
+                                    <a href="{% url 'planifier_entretien' c.id %}" class="btn-sm btn-interview">
+                                        <i class="fas fa-calendar-alt"></i> Entretien
                                     </a>
-                                {% else %}
-                                    <span class="text-muted"><i class="fas fa-file"></i> Pas de CV</span>
-                                {% endif %}
-                            {% endwith %}
-                            
-        <!-- 2. VOIR LETTRE DE MOTIVATION -->
-{% for doc in c.candidat.documents.all %}
-    {% if doc.type == 'lettre_motivation' and doc.contenu %}
-        <button class="btn-sm btn-lettre" onclick="showLettreMotivation('{{ doc.contenu|escapejs }}')">
-            <i class="fas fa-envelope-open-text"></i> lettre motivation
-        </button>
-    {% endif %}
-{% endfor %}
-                            
-                            <!-- 3. PLANIFIER ENTRETIEN -->
-                            <a href="{% url 'planifier_entretien' c.id %}" class="btn-sm btn-interview">
-                                <i class="fas fa-calendar-alt"></i> Entretien
-                            </a>
-                            
-                            <!-- 4. ACCEPTER -->
-                            <a href="{% url 'accepter_candidature' c.id %}" class="btn-sm btn-accept" onclick="return confirm('Accepter cette candidature ?')">
-                                <i class="fas fa-check-circle"></i> Accepter
-                            </a>
-                            
-                            <!-- 5. REJETER -->
-                            <a href="{% url 'rejeter_candidature' c.id %}" class="btn-sm btn-reject" onclick="return confirm('Rejeter cette candidature ?')">
-                                <i class="fas fa-times-circle"></i> Rejeter
-                            </a>
+                                    
+                                    <!-- Accepter -->
+                                    <a href="{% url 'accepter_candidature' c.id %}" class="btn-sm btn-accept" onclick="return confirm('Accepter cette candidature ?')">
+                                        <i class="fas fa-check-circle"></i> Accepter
+                                    </a>
+                                    
+                                    <!-- Rejeter -->
+                                    <a href="{% url 'rejeter_candidature' c.id %}" class="btn-sm btn-reject" onclick="return confirm('Rejeter cette candidature ?')">
+                                        <i class="fas fa-times-circle"></i> Rejeter
+                                    </a>
+                                </div>
+                                
+                                <!-- Zone Note + Commentaire -->
+                                <div class="rating-comment-area">
+                                    <div class="rating-area">
+                                        <span class="rating-label">Note Entretien :</span>
+                                        {% if c.note_evaluation %}
+                                            <div class="rating-display">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= c.note_evaluation %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <div class="rating-stars" data-candidature-id="{{ c.id }}">
+                                                <i class="far fa-star" data-value="1"></i>
+                                                <i class="far fa-star" data-value="2"></i>
+                                                <i class="far fa-star" data-value="3"></i>
+                                                <i class="far fa-star" data-value="4"></i>
+                                                <i class="far fa-star" data-value="5"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Commentaire -->
+                                    {% if c.commentaire_recruteur %}
+                                        <div class="comment-display">
+                                            <span class="comment-text">{{ c.commentaire_recruteur|truncatechars:50 }}</span>
+                                            <button class="btn-edit-comment" onclick="editComment({{ c.id }}, '{{ c.commentaire_recruteur|escapejs }}')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    {% else %}
+                                        <div class="comment-input">
+                                            <textarea id="comment-{{ c.id }}" rows="2" placeholder="Ajouter un commentaire (appréciation, points forts, etc.)"></textarea>
+                                            <button class="btn-save-comment" data-id="{{ c.id }}">✓ Enregistrer</button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -535,20 +682,116 @@
     </div>
 
     <script>
-        function showLettreMotivation(contenu) {
-            document.getElementById('lettreContenu').innerText = contenu;
-            document.getElementById('lettreModal').style.display = 'flex';
+    // Lettre de motivation
+    function showLettreMotivation(contenu) {
+        document.getElementById('lettreContenu').innerText = contenu;
+        document.getElementById('lettreModal').style.display = 'flex';
+    }
+    
+    function closeModal() {
+        document.getElementById('lettreModal').style.display = 'none';
+    }
+    
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('lettreModal')) {
+            closeModal();
         }
+    }
+
+    // Note d'évaluation (étoiles cliquables)
+    document.querySelectorAll('.rating-stars').forEach(starsContainer => {
+        const candidatureId = starsContainer.dataset.candidatureId;
+        const stars = starsContainer.querySelectorAll('i');
         
-        function closeModal() {
-            document.getElementById('lettreModal').style.display = 'none';
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const note = this.dataset.value;
+                
+                fetch(`/evaluer-candidature/${candidatureId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ note: note })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Erreur: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+
+    // Sauvegarder le commentaire
+    document.querySelectorAll('.btn-save-comment').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const candidatureId = this.dataset.id;
+            const textarea = document.getElementById(`comment-${candidatureId}`);
+            const commentaire = textarea ? textarea.value : '';
+            
+            if (!commentaire.trim()) {
+                alert("Veuillez écrire un commentaire");
+                return;
+            }
+            
+            fetch(`/commenter-candidature/${candidatureId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ commentaire: commentaire })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Erreur: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+
+    function editComment(id, ancienCommentaire) {
+        const nouveau = prompt("Modifier votre commentaire :", ancienCommentaire);
+        if (nouveau && nouveau !== ancienCommentaire) {
+            fetch(`/commenter-candidature/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ commentaire: nouveau })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) location.reload();
+            });
         }
-        
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('lettreModal')) {
-                closeModal();
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
+    }
     </script>
 </body>
 </html>

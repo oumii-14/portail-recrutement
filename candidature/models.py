@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -16,6 +18,7 @@ class Utilisateur(AbstractUser):
     dateCreation = models.DateTimeField(auto_now_add=True)
     statut = models.CharField(max_length=50, default='actif')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='candidat')
+    photo = models.ImageField(upload_to='photos/', blank=True, null=True)
 
     def seConnecter(self) -> bool:
         return True
@@ -27,7 +30,7 @@ class Utilisateur(AbstractUser):
         self.save()
 
     def __str__(self):
-        return f"{self.prenom} {self.nom}"  'li kayt afficha 3nd l admin'
+        return f"{self.prenom} {self.nom}"
 
 
 
@@ -76,6 +79,8 @@ class Candidat(models.Model):
     cv = models.FileField(upload_to='cv/', blank=True, null=True)
     profil = models.TextField(blank=True)
     telephone = models.CharField(max_length=20, blank=True)
+    date_naissance = models.DateField(null=True, blank=True)    # ← AJOUTE
+    ville = models.CharField(max_length=100, blank=True)   
 
     def __str__(self):
         return self.utilisateur.username
@@ -98,6 +103,15 @@ class Offre(models.Model):
     date_expiration = models.DateField(null=True, blank=True)
     recruteur = models.ForeignKey(Recruteur, on_delete=models.CASCADE, related_name='offres')
 
+    def est_expiree(self):
+        return self.date_expiration and self.date_expiration < timezone.now().date()
+    
+    def jours_restants(self):
+        if not self.date_expiration:
+            return 0
+        delta = self.date_expiration - timezone.now().date()
+        return delta.days
+    
     def __str__(self):
         return self.titre
 
@@ -117,6 +131,10 @@ class Candidature(models.Model):
     offre = models.ForeignKey(Offre, on_delete=models.CASCADE, related_name='candidatures')
     datePostulation = models.DateTimeField(auto_now_add=True)
     statut = models.ForeignKey(StatutCandidature, on_delete=models.SET_NULL, null=True)
+    note_evaluation = models.IntegerField(null=True, blank=True)      # ← 1-5 étoiles
+    commentaire_recruteur = models.TextField(blank=True, null=True)
+    lettre_motivation = models.TextField(blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.candidat} → {self.offre.titre}"
@@ -256,7 +274,6 @@ class AppStatusHistory(models.Model):
 
     def __str__(self):
         return f"{self.candidature} : {self.ancien_statut} → {self.nouveau_statut}"
-'juste une amelioration makaynx f notre diag de classe'
 
 
 class Dashboard:

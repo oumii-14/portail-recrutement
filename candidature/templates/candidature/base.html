@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OBMI Recrutement{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231E3A5F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='white'%3EO%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        :root {
+            --navy: #0A2540;
+            --primary: #1E3A5F;
+            --blue: #2C5F8A;
+            --light-blue: #E8F0FE;
+            --accent: #2563EB;
+            --surface: #FFFFFF;
+            --bg: #F8FAFC;
+            --text: #1E293B;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --radius: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .container-narrow { max-width: 720px; }
+        .container-wide { max-width: 1400px; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--primary); }
+
+        .page-content { padding: 40px 0; }
+
+        /* NAVBAR */
+        .navbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 72px;
+            display: flex;
+            align-items: center;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+        .logo-text span { color: var(--text-muted); font-weight: 500; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover { background: var(--bg); color: var(--primary); }
+        .nav-btn {
+            padding: 10px 20px !important;
+            border-radius: 40px !important;
+            font-weight: 600 !important;
+        }
+        .nav-btn-outline {
+            color: var(--primary) !important;
+            border: 1px solid var(--border);
+        }
+        .nav-btn-outline:hover {
+            background: var(--light-blue) !important;
+            border-color: var(--blue) !important;
+        }
+        .nav-btn-primary {
+            background: var(--primary) !important;
+            color: white !important;
+        }
+        .nav-btn-primary:hover { background: var(--navy) !important; }
+        .nav-btn-danger {
+            color: #DC2626 !important;
+            border: 1px solid #FECACA;
+        }
+        .nav-btn-danger:hover {
+            background: #FEF2F2 !important;
+            border-color: #DC2626 !important;
+        }
+        .nav-btn-admin {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent) !important;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .nav-btn-admin:hover {
+            background: var(--light-blue);
+            border-color: var(--blue);
+        }
+        .mobile-btn { display: none; background: none; border: none; font-size: 24px; color: var(--text); cursor: pointer; padding: 8px; }
+
+        /* FOOTER */
+        .footer {
+            background: var(--navy);
+            color: rgba(255,255,255,0.6);
+            padding: 64px 0 32px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        .footer-brand .logo-mark { margin-bottom: 16px; }
+        .footer-brand p { font-size: 14px; line-height: 1.7; max-width: 320px; }
+        .footer-col h4 {
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .footer-col a {
+            display: block;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 12px;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover { color: white; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 13px;
+        }
+
+        /* COMMON COMPONENTS */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 32px;
+        }
+        .card:hover { box-shadow: var(--shadow-lg); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--navy); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { border-color: var(--blue); color: var(--primary); }
+        .btn-danger {
+            background: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FEE2E2;
+        }
+        .btn-danger:hover { background: #FEE2E2; }
+        .btn-sm { padding: 8px 16px; font-size: 13px; }
+        .btn-lg { padding: 14px 28px; font-size: 15px; }
+
+        form label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+            background: var(--surface);
+            color: var(--text);
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--light-blue);
+        }
+        form textarea { min-height: 120px; resize: vertical; }
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-help { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-green { background: #DCFCE7; color: #166534; }
+        .badge-yellow { background: #FEF3C7; color: #92400E; }
+        .badge-blue { background: #DBEAFE; color: #1E40AF; }
+        .badge-purple { background: #F3E8FF; color: #6B21A5; }
+        .badge-red { background: #FEE2E2; color: #DC2626; }
+        .badge-gray { background: #F1F5F9; color: #475569; }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-success { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
+        .alert-error { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+        .alert-info { background: var(--light-blue); color: var(--blue); border: 1px solid #BFDBFE; }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        .text-center { text-align: center; }
+        .text-muted { color: var(--text-muted); }
+        .mt-2 { margin-top: 8px; }
+        .mt-4 { margin-top: 16px; }
+        .mt-8 { margin-top: 32px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mb-8 { margin-bottom: 32px; }
+        .gap-4 { gap: 16px; }
+        .flex { display: flex; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .flex-wrap { flex-wrap: wrap; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+        .empty-state h3 { color: var(--text-secondary); font-size: 18px; margin-bottom: 8px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 72px; left: 0; right: 0; background: var(--surface); flex-direction: column; padding: 16px 24px; border-bottom: 1px solid var(--border); gap: 4px; box-shadow: var(--shadow-lg); }
+            .nav-links.show { display: flex; }
+            .mobile-btn { display: block; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            .form-row { grid-template-columns: 1fr; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .page-title { font-size: 24px; }
+            .page-content { padding: 24px 0; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container nav-inner">
+        <div class="nav-left">
+            <a href="/" class="logo">
+                <div class="logo-mark">O</div>
+                <div class="logo-text">OBMI <span>Recrutement</span></div>
+            </a>
+            {% block nav_extra %}{% endblock %}
+        </div>
+        <button class="mobile-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+        <div class="nav-links" id="navLinks">
+            {% if user.is_authenticated %}
+                <a href="/dashboard/">Dashboard</a>
+                {% block nav_offres_auth %}<a href="/offres/">Offres</a>{% endblock %}
+                {% if user.utilisateur.type_utilisateur == 'recruteur' or user.is_staff %}
+                    <a href="/mes-offres/">Mes offres</a>
+                {% endif %}
+                <a href="/notifications/" style="position:relative;">
+                    Notifications
+                    {% if unread_notifications %}
+                    <span style="position:absolute;top:-4px;right:-10px;background:#DC2626;color:white;border-radius:50%;padding:2px 6px;font-size:10px;font-weight:700;line-height:1.2;min-width:18px;text-align:center;">{{ unread_notifications }}</span>
+                    {% endif %}
+                </a>
+                <a href="/messages/" style="position:relative;">
+                    Messages
+                    {% if unread_messages %}
+                    <span style="position:absolute;top:-4px;right:-10px;background:#DC2626;color:white;border-radius:50%;padding:2px 6px;font-size:10px;font-weight:700;line-height:1.2;min-width:18px;text-align:center;">{{ unread_messages }}</span>
+                    {% endif %}
+                </a>
+                <a href="/deconnexion/" class="nav-btn nav-btn-danger">Déconnexion</a>
+            {% else %}
+                {% block nav_offres_anon %}<a href="/offres/">Offres</a>{% endblock %}
+                <a href="/login/" class="nav-btn nav-btn-primary">Connexion</a>
+                <a href="/inscription/" class="nav-btn nav-btn-primary">S'inscrire</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+{% block content %}{% endblock %}
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-mark">O</div>
+                <p>OBMI Recrutement connecte les talents aux entreprises pour des recrutements plus rapides et plus efficaces.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Candidats</h4>
+                <a href="/offres/">Explorer les offres</a>
+                <a href="/inscription/">Créer un compte</a>
+                <a href="/login/">Connexion</a>
+            </div>
+            <div class="footer-col">
+                <h4>Recruteurs</h4>
+                <a href="/inscription/">Publier une offre</a>
+                <a href="/login/">Espace recruteur</a>
+            </div>
+            <div class="footer-col">
+                <h4>OBMI</h4>
+                <a href="/">Accueil</a>
+                <a href="/admin-login/">Administration</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 OBMI Recrutement – Tous droits réservés</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('menuBtn')?.addEventListener('click', function() {
+        document.getElementById('navLinks').classList.toggle('show');
+    });
+    document.addEventListener('click', function(e) {
+        const nav = document.getElementById('navLinks');
+        const btn = document.getElementById('menuBtn');
+        if (!nav?.contains(e.target) && !btn?.contains(e.target)) {
+            nav?.classList.remove('show');
+        }
+    });
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

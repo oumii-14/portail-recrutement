@@ -1,28 +1,24 @@
-from multiprocessing import context
-import zipfile
-from django.db import models
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.utils import timezone
-from datetime import date
-from django.db.models import Count
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
+from django.core.paginator import Paginator
+from django.core.exceptions import ValidationError
 import csv
+import json
+import io
 import os
-from django.contrib.auth import authenticate, login
-import django.contrib
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import authenticate, login
 from .models import Utilisateur, Candidat, Recruteur, Offre, Candidature, Entretien, Notification, StatutCandidature, Document, Message, AppStatusHistory
-
-
 
 # 1. FONCTIONS UTILITAIRES
 def creer_notification(utilisateur, type_notif, contenu):
@@ -33,6 +29,47 @@ def creer_notification(utilisateur, type_notif, contenu):
         dateEnvoi=timezone.now(),
         lu=False
     )
+    MAX_NOTIFS = 30
+    notifs = Notification.objects.filter(utilisateur=utilisateur).order_by('-dateEnvoi')
+    if notifs.count() > MAX_NOTIFS:
+        ids_a_garder = list(notifs.values_list('id', flat=True)[:MAX_NOTIFS])
+        Notification.objects.filter(utilisateur=utilisateur).exclude(id__in=ids_a_garder).delete()
+
+
+@login_required
+@require_http_methods(["POST"])
+@csrf_protect
+def marquer_tout_lu(request):
+    """Marque toutes les notifications non lues comme lues"""
+    try:
+        # Récupérer les notifications non lues de l'utilisateur
+        unread_notifications = Notification.objects.filter(
+            utilisateur=request.user,
+            lu=False
+        )
+        
+        count = unread_notifications.count()
+        
+        # Marquer comme lues
+        unread_notifications.update(lu=True)
+        
+        # Nouveau total de notifications (toutes, y compris lues)
+        total_notifications = Notification.objects.filter(
+            utilisateur=request.user
+        ).count()
+        
+        return JsonResponse({
+            'success': True,
+            'marquees': count,
+            'nouveau_total': total_notifications,
+            'message': f'{count} notification(s) marquée(s) comme lue(s)'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
 
 
 # =====================================================
@@ -91,15 +128,13 @@ def connexion(request):
         
         if user:
             login(request, user)
-            return redirect('dashboard')
+            next_url = request.GET.get('next') or request.POST.get('next') or 'dashboard'
+            return redirect(next_url)
         else:
-            django.contrib.messages.error(request, 'Email ou mot de passe incorrect')
+            messages.error(request, 'Email ou mot de passe incorrect')
             return redirect('connexion')
     
     return render(request, 'candidature/connexion.html')
-
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import authenticate, login
 
 @csrf_protect
 def admin_login(request):
@@ -119,19 +154,13 @@ def admin_login(request):
                 login(request, user)
                 return redirect('admin_dashboard')
             else:
-                django.contrib.messages.error(request, 'Vous n\'avez pas les droits administrateur')
+                messages.error(request, 'Vous n\'avez pas les droits administrateur')
                 return redirect('admin_login')
         else:
-            django.contrib.messages.error(request, 'Email ou mot de passe incorrect')
+            messages.error(request, 'Email ou mot de passe incorrect')
             return redirect('admin_login')
     
     return render(request, 'candidature/admin_login.html')
-
-  
-
-
-
-
 
 def deconnexion(request):
     logout(request)
@@ -147,9 +176,8 @@ def accueil(request):
     return render(request, 'candidature/accueil.html', {'offres': offres})
 
 
+@login_required
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('connexion')
     
     context = {'user': request.user}
     
@@ -163,7 +191,15 @@ def dashboard(request):
             context['messages_non_lus'] = Message.objects.filter(destinataire=request.user, lu=False).count()
             context['offres_suggestions'] = Offre.objects.all().order_by('-datePublication')[:3]
             context['notifications_count'] = Notification.objects.filter(utilisateur=request.user, lu=False).count()
-        except:
+            context['entretiens_a_venir_list'] = Entretien.objects.filter(candidature__candidat=candidat, date__gte=date.today()).order_by('date')[:3]
+            context['derniers_messages'] = Message.objects.filter(
+                Q(destinataire=request.user) | Q(expediteur=request.user)
+            ).order_by('-dateEnvoi')[:3]
+            context['activites'] = Notification.objects.filter(utilisateur=request.user).order_by('-dateEnvoi')[:5]
+            context['offres_disponibles_count'] = Offre.objects.count()
+            context['unread_messages'] = context['messages_non_lus']
+            context['unread_notifications'] = context['notifications_count']
+        except Candidat.DoesNotExist:
             context['candidatures_count'] = 0
             context['mes_candidatures'] = []
             context['offres'] = Offre.objects.all()
@@ -171,6 +207,12 @@ def dashboard(request):
             context['messages_non_lus'] = 0
             context['offres_suggestions'] = []
             context['notifications_count'] = 0
+            context['entretiens_a_venir_list'] = []
+            context['derniers_messages'] = []
+            context['activites'] = []
+            context['offres_disponibles_count'] = Offre.objects.count()
+            context['unread_messages'] = 0
+            context['unread_notifications'] = 0
     else:
         try:
             recruteur = Recruteur.objects.get(utilisateur=request.user)
@@ -182,19 +224,31 @@ def dashboard(request):
             context['dernieres_candidatures'] = Candidature.objects.filter(offre__recruteur=recruteur).order_by('-datePostulation')[:5]
             context['messages_non_lus'] = Message.objects.filter(destinataire=request.user, lu=False).count()
             context['entretiens_a_venir'] = Entretien.objects.filter(date__gte=date.today()).count()
+            context['entretiens_a_venir_list'] = Entretien.objects.filter(date__gte=date.today()).order_by('date')[:3]
             context['notifications_count'] = Notification.objects.filter(utilisateur=request.user, lu=False).count()
             context['candidats_suggestions'] = Candidat.objects.all()[:3]
             context['offres_disponibles_count'] = Offre.objects.count()
-        except:
+            context['derniers_messages'] = Message.objects.filter(
+                Q(destinataire=request.user) | Q(expediteur=request.user)
+            ).order_by('-dateEnvoi')[:3]
+            context['activites'] = Notification.objects.filter(utilisateur=request.user).order_by('-dateEnvoi')[:5]
+            context['unread_messages'] = context['messages_non_lus']
+            context['unread_notifications'] = context['notifications_count']
+        except Recruteur.DoesNotExist:
             context['offres_count'] = 0
             context['mes_offres'] = []
             context['total_candidatures'] = 0
             context['dernieres_candidatures'] = []
             context['messages_non_lus'] = 0
             context['entretiens_a_venir'] = 0
+            context['entretiens_a_venir_list'] = []
             context['notifications_count'] = 0
             context['candidats_suggestions'] = []
             context['offres_disponibles_count'] = Offre.objects.count()
+            context['derniers_messages'] = []
+            context['activites'] = []
+            context['unread_messages'] = 0
+            context['unread_notifications'] = 0
 
     # ========== ALEX - ASSISTANT INTELLIGENT ==========
     if request.user.role == 'candidat':
@@ -219,7 +273,7 @@ def dashboard(request):
                 else:
                     alex_message = "💪 Continue comme ça ! Consulte les nouvelles offres régulièrement."
         
-        except:
+        except Candidat.DoesNotExist:
             alex_message = "📢 Complète ton profil pour recevoir des conseils personnalisés."
 
     else:
@@ -234,7 +288,7 @@ def dashboard(request):
             else:
                 alex_message = "📊 Tout est calme. Pense à promouvoir tes offres."
         
-        except:
+        except Recruteur.DoesNotExist:
             alex_message = "📢 Complète ton profil pour recevoir des conseils."
 
     context['alex_message'] = alex_message
@@ -242,11 +296,68 @@ def dashboard(request):
     return render(request, 'candidature/dashboard.html', context)
 
 
+@login_required
 def mon_profil(request):
-    return render(request, 'candidature/profil.html', {'user': request.user})
+    user = request.user
+    context = {'user': user}
+    
+    if user.role == 'candidat':
+        try:
+            candidat = Candidat.objects.get(utilisateur=user)
+            context['candidat'] = candidat
+        except Candidat.DoesNotExist:
+            context['candidat'] = None
+    elif user.role == 'recruteur':
+        try:
+            recruteur = Recruteur.objects.get(utilisateur=user)
+            context['recruteur'] = recruteur
+        except Recruteur.DoesNotExist:
+            context['recruteur'] = None
+    
+    return render(request, 'candidature/profil.html', context)
+
+@login_required
+def modifier_profil(request):
+    user = request.user
+    
+    if request.method == 'POST':
+        user.nom = request.POST.get('nom')
+        user.prenom = request.POST.get('prenom')
+        user.save()
+        
+        if user.role == 'candidat':
+            candidat = Candidat.objects.get(utilisateur=user)
+            candidat.telephone = request.POST.get('telephone', '')
+            candidat.date_naissance = request.POST.get('date_naissance') or None
+            candidat.ville = request.POST.get('ville', '')
+            candidat.save()
+        
+        elif user.role == 'recruteur':
+            recruteur = Recruteur.objects.get(utilisateur=user)
+            recruteur.entreprise = request.POST.get('entreprise', '')
+            recruteur.telephone = request.POST.get('telephone', '')
+            recruteur.departement = request.POST.get('departement', '')
+            recruteur.save()
+        
+        messages.success(request, 'Profil mis à jour avec succès')
+        return redirect('mon_profil')
+    
+    return redirect('mon_profil')
 
 
+@login_required
+def upload_photo(request):
+    if request.method == 'POST' and request.FILES.get('photo'):
+        request.user.photo = request.FILES['photo']
+        request.user.save()
+        messages.success(request, 'Photo de profil mise à jour')
+    return redirect(request.META.get('HTTP_REFERER', 'dashboard'))
+
+
+@login_required
 def admin_dashboard(request):
+    if not request.user.is_staff:
+        return redirect('dashboard')
     from django.db.models import Count
     from datetime import date, datetime, timedelta
 
@@ -267,6 +378,9 @@ def admin_dashboard(request):
         'entretiens_a_venir': Entretien.objects.filter(date__gte=date.today()).order_by('date')[:10],
         'dernieres_candidatures': Candidature.objects.all().order_by('-datePostulation')[:10],
         'derniers_utilisateurs': Utilisateur.objects.all().order_by('-dateCreation')[:10],
+        
+        # ========== HISTORIQUE DES STATUTS ==========
+        'historique_statuts': AppStatusHistory.objects.all().order_by('-date_changement')[:50],
     }
     
     # ========== DONNÉES POUR GRAPHIQUES ==========
@@ -325,6 +439,7 @@ def creer_offre(request):
             recruteur=recruteur
         )
         
+        messages.success(request, 'Offre publiée avec succès !')
         return redirect('dashboard')
     
     return render(request, 'candidature/creer_offre.html')
@@ -341,7 +456,10 @@ def mes_offres(request):
 
 @login_required
 def modifier_offre(request, offre_id):
-    offre = Offre.objects.get(id=offre_id)
+    try:
+        offre = Offre.objects.get(id=offre_id)
+    except Offre.DoesNotExist:
+        return redirect('dashboard')
     
     if request.user.role != 'recruteur' or offre.recruteur.utilisateur != request.user:
         return redirect('dashboard')
@@ -354,6 +472,7 @@ def modifier_offre(request, offre_id):
         date_expiration = request.POST.get('date_expiration')
         offre.date_expiration = date_expiration if date_expiration else None
         offre.save()
+        messages.success(request, 'Offre modifiée avec succès !')
         return redirect('dashboard')
     
     return render(request, 'candidature/modifier_offre.html', {'offre': offre})
@@ -361,35 +480,88 @@ def modifier_offre(request, offre_id):
 
 @login_required
 def supprimer_offre(request, offre_id):
-    offre = Offre.objects.get(id=offre_id)
+    try:
+        offre = Offre.objects.get(id=offre_id)
+    except Offre.DoesNotExist:
+        return redirect('dashboard')
     
     if request.user.role != 'recruteur' or offre.recruteur.utilisateur != request.user:
         return redirect('dashboard')
     
+    if request.method != 'POST':
+        return redirect('mes_offres')
+    
     offre.delete()
-    return redirect('dashboard')
+    messages.success(request, 'Offre supprimée avec succès')
+    return redirect('mes_offres')
 
 
-@login_required
 def liste_offres(request):
-    offres = Offre.objects.all().order_by('-datePublication')
-    query = request.GET.get('q')
-    if query:
-        offres = offres.filter(titre__icontains=query) | offres.filter(lieu__icontains=query)
-    return render(request, 'candidature/liste_offres.html', {'offres': offres, 'query': query})
+    offres = Offre.objects.all()
+    q = request.GET.get('q', '').strip()
+    type_contrat = request.GET.get('type_contrat', '').strip()
+    lieu = request.GET.get('lieu', '').strip()
+    sort = request.GET.get('sort', '').strip()
+
+    if q:
+        offres = offres.filter(Q(titre__icontains=q) | Q(lieu__icontains=q))
+    if type_contrat:
+        offres = offres.filter(type_contrat=type_contrat)
+    if lieu:
+        offres = offres.filter(lieu__icontains=lieu)
+
+    sort_map = {
+        'date_asc': 'datePublication',
+        'titre': 'titre',
+        'expiration': 'date_expiration',
+    }
+    offres = offres.order_by(sort_map.get(sort, '-datePublication'))
+
+    lieux_disponibles = Offre.objects.values_list('lieu', flat=True).distinct().order_by('lieu')
+
+    paginator = Paginator(offres, 9)
+    page = request.GET.get('page')
+    offres_page = paginator.get_page(page)
+
+    applied_offre_ids = []
+    if request.user.is_authenticated and request.user.role == 'candidat':
+        try:
+            candidat = Candidat.objects.get(utilisateur=request.user)
+            applied_offre_ids = Candidature.objects.filter(candidat=candidat).values_list('offre_id', flat=True)
+        except Candidat.DoesNotExist:
+            pass
+
+    return render(request, 'candidature/liste_offres.html', {
+        'offres': offres_page,
+        'query': q or '',
+        'type_contrat': type_contrat,
+        'lieu': lieu,
+        'sort': sort,
+        'lieux_disponibles': lieux_disponibles,
+        'applied_offre_ids': list(applied_offre_ids),
+    })
 
 
 # =====================================================
 # 5. GESTION DES CANDIDATURES (postuler, accepter, refuser, entretien)
 # =====================================================
 
-@login_required
 def postuler(request, offre_id):
+    if not request.user.is_authenticated:
+        from django.contrib.auth.views import redirect_to_login
+        return redirect_to_login(request.get_full_path(), login_url='/login/')
     if request.user.role != 'candidat':
         return redirect('dashboard')
     
-    offre = Offre.objects.get(id=offre_id)
-    candidat = Candidat.objects.get(utilisateur=request.user)
+    try:
+        offre = Offre.objects.get(id=offre_id)
+    except Offre.DoesNotExist:
+        return redirect('liste_offres')
+    
+    try:
+        candidat = Candidat.objects.get(utilisateur=request.user)
+    except Candidat.DoesNotExist:
+        return redirect('dashboard')
     
     deja_postule = Candidature.objects.filter(candidat=candidat, offre=offre).exists()
     
@@ -409,6 +581,12 @@ def postuler(request, offre_id):
                 'erreur': 'Veuillez joindre votre CV.'
             })
         
+        if cv and cv.size > 5 * 1024 * 1024:
+            return render(request, 'candidature/postuler.html', {
+                'offre': offre,
+                'erreur': 'Le CV ne doit pas dépasser 5 Mo.'
+            })
+        
         if not lettre_motivation:
             return render(request, 'candidature/postuler.html', {
                 'offre': offre,
@@ -416,13 +594,16 @@ def postuler(request, offre_id):
             })
         
         statut_attente = StatutCandidature.objects.get(nom='en_attente')
+        
+      
         candidature = Candidature.objects.create(
             candidat=candidat,
             offre=offre,
-            statut=statut_attente
+            statut=statut_attente,
+            lettre_motivation=lettre_motivation  # ← LETTRE DANS CANDIDATURE
         )
         
-        # Sauvegarde du CV
+        # Sauvegarde du CV (seulement)
         Document.objects.create(
             candidat=candidat,
             type='cv',
@@ -430,14 +611,6 @@ def postuler(request, offre_id):
             date_upload=timezone.now()
         )
         
-        # Sauvegarde de la lettre de motivation (avec contenu texte)
-        Document.objects.create(
-            candidat=candidat,
-            type='lettre_motivation',
-            fichier=None,
-            contenu=lettre_motivation,
-            date_upload=timezone.now()
-        )
         
         creer_notification(
             utilisateur=offre.recruteur.utilisateur,
@@ -445,10 +618,10 @@ def postuler(request, offre_id):
             contenu=f"Nouvelle candidature de {candidat.utilisateur.prenom} {candidat.utilisateur.nom} pour l'offre {offre.titre}"
         )
         
+        messages.success(request, 'Candidature envoyée avec succès !')
         return redirect('dashboard')
     
     return render(request, 'candidature/postuler.html', {'offre': offre})
-
 
 
 @login_required
@@ -511,34 +684,96 @@ def candidatures_recues(request):
     })
 
 @login_required
+def evaluer_candidature(request, candidature_id):
+    """Enregistre la note (1-5 étoiles) pour une candidature"""
+    if request.user.role != 'recruteur':
+        return JsonResponse({'error': 'Non autorisé'}, status=403)
+    
+    try:
+        data = json.loads(request.body)
+        note = data.get('note')
+        
+        candidature = Candidature.objects.get(id=candidature_id)
+        candidature.note_evaluation = int(note)
+        candidature.save()
+        
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@login_required
+def commenter_candidature(request, candidature_id):
+    """Enregistre le commentaire pour une candidature"""
+    if request.user.role != 'recruteur':
+        return JsonResponse({'error': 'Non autorisé'}, status=403)
+    
+    try:
+        data = json.loads(request.body)
+        commentaire = data.get('commentaire', '')
+        
+        candidature = Candidature.objects.get(id=candidature_id)
+        candidature.commentaire_recruteur = commentaire
+        candidature.save()
+        
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@login_required
 def accepter_candidature(request, candidature_id):
     candidature = Candidature.objects.get(id=candidature_id)
+    ancien_statut = candidature.statut
     statut_accepte = StatutCandidature.objects.get(nom='acceptee')
+    
     candidature.statut = statut_accepte
     candidature.save()
+    
+    # Ajout de l'historique
+    from .models import AppStatusHistory
+    AppStatusHistory.objects.create(
+        candidature=candidature,
+        ancien_statut=ancien_statut,
+        nouveau_statut=statut_accepte,
+        modifie_par=request.user
+    )
     
     creer_notification(
         utilisateur=candidature.candidat.utilisateur,
         type_notif='success',
-        contenu=f"Votre candidature pour l'offre {candidature.offre.titre} a été acceptée !"
+        contenu=f"Félicitations ! Votre candidature pour {candidature.offre.titre} a été acceptée."
     )
     
+    messages.success(request, 'Candidature acceptée avec succès !')
     return redirect('candidatures_recues')
 
 
 @login_required
 def rejeter_candidature(request, candidature_id):
     candidature = Candidature.objects.get(id=candidature_id)
+    ancien_statut = candidature.statut
     statut_rejete = StatutCandidature.objects.get(nom='rejetee')
+    
     candidature.statut = statut_rejete
     candidature.save()
+    
+    # Ajout de l'historique
+    from .models import AppStatusHistory
+    AppStatusHistory.objects.create(
+        candidature=candidature,
+        ancien_statut=ancien_statut,
+        nouveau_statut=statut_rejete,
+        modifie_par=request.user
+    )
     
     creer_notification(
         utilisateur=candidature.candidat.utilisateur,
         type_notif='error',
-        contenu=f"Votre candidature pour l'offre {candidature.offre.titre} a été refusée."
+        contenu=f"Votre candidature pour {candidature.offre.titre} a été refusée."
     )
     
+    messages.success(request, 'Candidature refusée.')
     return redirect('candidatures_recues')
 
 
@@ -565,16 +800,28 @@ def planifier_entretien(request, candidature_id):
             notes=''
         )
         
+        ancien_statut = candidature.statut
+        
         try:
             statut_entretien = StatutCandidature.objects.get(nom='entretien')
-        except:
+        except StatutCandidature.DoesNotExist:
             statut_entretien = StatutCandidature.objects.create(
                 nom='entretien',
                 type='intermediaire',
                 acceptee=False
             )
+        
         candidature.statut = statut_entretien
         candidature.save()
+        
+        # Ajout de l'historique
+        from .models import AppStatusHistory
+        AppStatusHistory.objects.create(
+            candidature=candidature,
+            ancien_statut=ancien_statut,
+            nouveau_statut=statut_entretien,
+            modifie_par=request.user
+        )
         
         creer_notification(
             utilisateur=candidature.candidat.utilisateur,
@@ -617,9 +864,17 @@ def entretiens(request):
     else:
         entretiens_list = []
     
+    now = date.today()
+    upcoming_count = entretiens_list.filter(date__gte=now, statut__in=['planifie', 'modifie']).count()
+    done_count = entretiens_list.filter(date__lt=now, statut__in=['planifie', 'modifie']).count()
+    cancelled_count = entretiens_list.filter(statut='annule').count()
+    
     context = {
         'entretiens': entretiens_list,
         'user': user,
+        'upcoming_count': upcoming_count,
+        'done_count': done_count,
+        'cancelled_count': cancelled_count,
     }
     
     return render(request, 'candidature/entretiens.html', context)
@@ -663,9 +918,17 @@ def messages_liste(request):
     messages_envoyes = Message.objects.filter(expediteur=request.user).order_by('-dateEnvoi')
     
     for msg in messages_recus:
-        conversations[msg.expediteur.id] = msg.expediteur
+        if msg.expediteur.id not in conversations:
+            conversations[msg.expediteur.id] = {
+                'user': msg.expediteur,
+                'unread': Message.objects.filter(expediteur=msg.expediteur, destinataire=request.user, lu=False).exists()
+            }
     for msg in messages_envoyes:
-        conversations[msg.destinataire.id] = msg.destinataire
+        if msg.destinataire.id not in conversations:
+            conversations[msg.destinataire.id] = {
+                'user': msg.destinataire,
+                'unread': False
+            }
     
     return render(request, 'candidature/messages_liste.html', {
         'conversations': conversations.values(),
@@ -691,7 +954,7 @@ def envoyer_message(request):
                 type_notif='info',
                 contenu=f"Nouveau message de {request.user.prenom} {request.user.nom}"
             )
-            django.contrib.messages.success(request, 'Message envoyé !')
+            messages.success(request, 'Message envoyé !')
             return redirect('messages_liste')
     
     utilisateurs = Utilisateur.objects.exclude(id=request.user.id)
@@ -717,6 +980,7 @@ def conversation(request, utilisateur_id):
 
 @login_required
 def mes_notifications(request):
+    Notification.objects.filter(utilisateur=request.user, lu=False).update(lu=True)
     notifications = Notification.objects.filter(utilisateur=request.user).order_by('-dateEnvoi')
     return render(request, 'candidature/notifications.html', {'notifications': notifications})
 
@@ -811,152 +1075,10 @@ def blog_preparer_entretien(request):
 def blog_tendances_2026(request):
     return render(request, 'candidature/blog_tendances_2026.html')
 
-@login_required
-def export_statistiques(request):
-    """Exporte toutes les statistiques en CSV pour l'admin"""
-    if request.user.role != 'admin':
-        return redirect('dashboard')
-    
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="statistiques_obmi.csv"'
-    
-    writer = csv.writer(response)
-    writer.writerow(['📊 STATISTIQUES OBMIRECRUTEMENT', ''])
-    writer.writerow(['Date export', datetime.now().strftime('%d/%m/%Y %H:%M')])
-    writer.writerow([])
-    writer.writerow(['Indicateur', 'Valeur'])
-    writer.writerow(['Offres publiées', Offre.objects.count()])
-    writer.writerow(['Candidats inscrits', Candidat.objects.count()])
-    writer.writerow(['Recruteurs inscrits', Recruteur.objects.count()])
-    writer.writerow(['Candidatures reçues', Candidature.objects.count()])
-    writer.writerow(['Entretiens planifiés', Entretien.objects.count()])
-    writer.writerow(['Messages échangés', Message.objects.count()])
-    writer.writerow([])
-    writer.writerow(['📋 RÉPARTITION DES CANDIDATURES', ''])
-    writer.writerow(['En attente', Candidature.objects.filter(statut__nom='en_attente').count()])
-    writer.writerow(['Acceptées', Candidature.objects.filter(statut__nom='acceptee').count()])
-    writer.writerow(['Refusées', Candidature.objects.filter(statut__nom='rejetee').count()])
-    writer.writerow(['Entretien', Candidature.objects.filter(statut__nom='entretien').count()])
-    
-    return response
-
-@login_required
-def generer_rapport_pdf(request):
-    """Génère un rapport PDF complet pour l'admin"""
-    if request.user.role != 'admin':
-        return redirect('dashboard')
-    
-    from reportlab.lib.pagesizes import A4, landscape
-    from reportlab.pdfgen import canvas
-    from reportlab.lib.colors import HexColor
-    import io
-    
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer, pagesize=landscape(A4))
-    width, height = landscape(A4)
-    
-    # En-tête
-    p.setFont("Helvetica-Bold", 20)
-    p.setFillColor(HexColor('#1E3A5F'))
-    p.drawString(50, height - 50, "OBMI Recrutement - Rapport d'activité")
-    
-    p.setFont("Helvetica", 10)
-    p.setFillColor(HexColor('#666666'))
-    p.drawString(50, height - 75, f"Généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')}")
-    p.line(50, height - 90, width - 50, height - 90)
-    
-    # Section 1 : Statistiques générales
-    y = height - 130
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(50, y, "1. Statistiques générales")
-    y -= 30
-    
-    p.setFont("Helvetica", 11)
-    stats = [
-        f"📄 Offres publiées : {Offre.objects.count()}",
-        f"👥 Candidats inscrits : {Candidat.objects.count()}",
-        f"🏢 Recruteurs inscrits : {Recruteur.objects.count()}",
-        f"📋 Candidatures reçues : {Candidature.objects.count()}",
-        f"🎤 Entretiens planifiés : {Entretien.objects.count()}",
-        f"💬 Messages échangés : {Message.objects.count()}",
-    ]
-    for stat in stats:
-        p.drawString(70, y, stat)
-        y -= 22
-    
-    # Section 2 : Répartition des candidatures
-    y -= 20
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(50, y, "2. Répartition des candidatures")
-    y -= 30
-    
-    p.setFont("Helvetica", 11)
-    p.drawString(70, y, f"⏳ En attente : {Candidature.objects.filter(statut__nom='en_attente').count()}")
-    y -= 22
-    p.drawString(70, y, f"✅ Acceptées : {Candidature.objects.filter(statut__nom='acceptee').count()}")
-    y -= 22
-    p.drawString(70, y, f"❌ Refusées : {Candidature.objects.filter(statut__nom='rejetee').count()}")
-    y -= 22
-    p.drawString(70, y, f"📅 Entretien : {Candidature.objects.filter(statut__nom='entretien').count()}")
-    
-    # Section 3 : Top offres
-    y -= 40
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(50, y, "3. Offres les plus populaires")
-    y -= 30
-    
-    top_offres = Offre.objects.annotate(total=Count('candidatures')).order_by('-total')[:5]
-    p.setFont("Helvetica", 11)
-    for offre in top_offres:
-        p.drawString(70, y, f"• {offre.titre} : {offre.total} candidature(s)")
-        y -= 22
-    
-    # Pied de page
-    p.setFont("Helvetica", 8)
-    p.setFillColor(HexColor('#999999'))
-    p.drawString(width - 150, 30, "OBMI Recrutement - Rapport automatique")
-    
-    p.save()
-    buffer.seek(0)
-    
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="rapport_obmi.pdf"'
-    return response
-
-@login_required
-def mes_documents(request):
-    """Liste des documents du candidat"""
-    if request.user.role != 'candidat':
-        return redirect('dashboard')
-    
-    candidat = Candidat.objects.get(utilisateur=request.user)
-    documents = Document.objects.filter(candidat=candidat).order_by('-date_upload')
-    
-    return render(request, 'candidature/mes_documents.html', {'documents': documents})
-
-
-@login_required
-def supprimer_document(request, doc_id):
-    """Supprime un document (CV, lettre de motivation)"""
-    doc = Document.objects.get(id=doc_id)
-    
-    # Vérifier que le document appartient au candidat connecté
-    if doc.candidat.utilisateur != request.user:
-        return redirect('dashboard')
-    
-    # Supprimer le fichier physique
-    if doc.fichier and os.path.isfile(doc.fichier.path):
-        os.remove(doc.fichier.path)
-    
-    doc.delete()
-    django.contrib.messages.success(request, "Document supprimé avec succès")
-    return redirect('mes_documents')
 
 @login_required
 def export_statistiques(request):
     """Exporte toutes les statistiques en CSV (compatible Excel)"""
-   
-    
     # Encodage UTF-8 avec BOM pour Excel
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="statistiques_obmi.csv"'
@@ -987,10 +1109,6 @@ def export_statistiques(request):
 @login_required
 def generer_rapport_pdf(request):
     """Génère un rapport PDF complet"""
-    # Supprime ou commente cette ligne temporairement
-    # if not (request.user.is_superuser or request.user.role == 'admin'):
-    #     return redirect('dashboard')
-    
     from reportlab.lib.pagesizes import A4, landscape
     from reportlab.pdfgen import canvas
     from reportlab.lib.colors import HexColor
@@ -1068,3 +1186,34 @@ def generer_rapport_pdf(request):
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="rapport_obmi.pdf"'
     return response
+
+
+@login_required
+def mes_documents(request):
+    """Liste des documents du candidat"""
+    if request.user.role != 'candidat':
+        return redirect('dashboard')
+    
+    candidat = Candidat.objects.get(utilisateur=request.user)
+    documents = Document.objects.filter(candidat=candidat).order_by('-date_upload')
+    
+    return render(request, 'candidature/mes_documents.html', {'documents': documents})
+
+
+@login_required
+@login_required
+def supprimer_document(request, doc_id):
+    doc = Document.objects.get(id=doc_id)
+    
+    if doc.candidat.utilisateur != request.user:
+        return redirect('dashboard')
+    
+    if request.method != 'POST':
+        return redirect('mes_documents')
+    
+    if doc.fichier and os.path.isfile(doc.fichier.path):
+        os.remove(doc.fichier.path)
+    
+    doc.delete()
+    messages.success(request, "Document supprimé avec succès")
+    return redirect('mes_documents')

@@ -1,338 +1,48 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes messages – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F5F7;
-            color: #1A1A1A;
-        }
-
-        /* HEADER */
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #EAEAEA;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .logo .blue {
-            background: linear-gradient(135deg, #0A2540, #1E3A5F);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #1E3A5F;
-        }
-
-        .logo .light {
-            color: #5F6F82;
-            font-weight: 500;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4A4A4A;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1E3A5F;
-        }
-
-        .nav-links .btn-logout {
-            background: #FEF2F2;
-            border: 1px solid #FEE2E2;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #DC2626;
-        }
-
-        .nav-links .btn-logout:hover {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 32px 40px;
-        }
-
-        /* PAGE HEADER */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111111;
-        }
-
-        .page-header p {
-            color: #666666;
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        /* NEW MESSAGE BUTTON */
-        .btn-new {
-            background: #1E3A5F;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-        }
-
-        .btn-new:hover {
-            background: #0A2540;
-            transform: translateY(-1px);
-        }
-
-        /* SUCCESS MESSAGE */
-        .success-message {
-            background: #DCFCE7;
-            border: 1px solid #BBF7D0;
-            color: #166534;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .success-message i {
-            font-size: 18px;
-        }
-
-        /* CONVERSATIONS LIST */
-        .conversations-card {
-            background: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #EAEAEA;
-            overflow: hidden;
-        }
-
-        .section-title {
-            padding: 20px 24px;
-            background: #FAFAFA;
-            border-bottom: 1px solid #EAEAEA;
-        }
-
-        .section-title h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #111111;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title h3 i {
-            color: #1E3A5F;
-        }
-
-        .conv-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            border-bottom: 1px solid #EAEAEA;
-            transition: 0.2s;
-        }
-
-        .conv-item:hover {
-            background: #FAFAFA;
-        }
-
-        .conv-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-        }
-
-        .conv-avatar {
-            width: 48px;
-            height: 48px;
-            background: #EFF6FF;
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .conv-avatar i {
-            font-size: 22px;
-            color: #1E3A5F;
-        }
-
-        .conv-details {
-            flex: 1;
-        }
-
-        .conv-name {
-            font-weight: 600;
-            color: #111111;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .conv-email {
-            font-size: 12px;
-            color: #888888;
-        }
-
-        .conv-link {
-            background: #F5F5F5;
-            padding: 8px 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            color: #1E3A5F;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .conv-link:hover {
-            background: #EFF6FF;
-        }
-
-        /* EMPTY STATE */
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            color: #CCCCCC;
-            margin-bottom: 16px;
-        }
-
-        .empty-state p {
-            color: #666666;
-            margin-bottom: 20px;
-        }
-
-        .empty-state .btn-new-empty {
-            background: #1E3A5F;
-            color: white;
-            padding: 10px 24px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #1E3A5F;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-            margin-top: 24px;
-        }
-
-        .back-link:hover {
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .container {
-                padding: 24px 20px;
-            }
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .conv-item {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-            }
-            .conv-link {
-                align-self: flex-start;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <span class="blue">OBMI</span><span class="light">Recrutement</span>
-        </div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
-        </div>
-    </div>
-
-    <div class="container">
+{% extends 'candidature/base.html' %}
+{% block title %}Mes messages – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.container-narrow { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 28px; }
+.page-header h1 { font-size: 28px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; }
+.page-header p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+.btn-new { background: var(--primary); color: white; padding: 12px 24px; border-radius: 40px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; }
+.btn-new:hover { background: var(--navy); transform: translateY(-1px); }
+.success-message { background: #DCFCE7; border: 1px solid #BBF7D0; color: #166534; padding: 12px 20px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.conversations-card { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+.section-title { padding: 20px 24px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.section-title h3 { font-size: 16px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.section-title h3 i { color: var(--primary); }
+.conv-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); transition: 0.2s; }
+.conv-item:hover { background: var(--bg); }
+.conv-item:last-child { border-bottom: none; }
+.conv-info { display: flex; align-items: center; gap: 14px; flex: 1; }
+.conv-avatar { width: 48px; height: 48px; background: var(--light-blue); border-radius: 60px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; }
+.conv-avatar i { font-size: 22px; color: var(--primary); }
+.conv-avatar .unread-dot { position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: #DC2626; border-radius: 50%; border: 2px solid white; }
+.conv-details { flex: 1; }
+.conv-name { font-weight: 600; color: var(--text); font-size: 16px; margin-bottom: 4px; }
+.conv-email { font-size: 12px; color: var(--text-muted); }
+.conv-link { background: var(--bg); padding: 8px 16px; border-radius: 30px; text-decoration: none; font-size: 13px; font-weight: 500; color: var(--primary); transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.conv-link:hover { background: var(--light-blue); }
+.empty-state { text-align: center; padding: 60px; }
+.empty-state i { font-size: 48px; color: var(--text-muted); margin-bottom: 16px; }
+.empty-state p { color: var(--text-secondary); margin-bottom: 20px; }
+.empty-state .btn-new-empty { background: var(--primary); color: white; padding: 10px 24px; border-radius: 40px; text-decoration: none; font-size: 14px; font-weight: 500; display: inline-block; }
+.empty-state .btn-new-empty:hover { background: var(--navy); }
+@media (max-width: 768px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .conv-item { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .conv-link { align-self: flex-start; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-narrow">
         <div class="page-header">
             <div>
-                <h1>💬 Mes messages</h1>
+                <h1>Mes messages</h1>
                 <p>Discutez avec les recruteurs et candidats</p>
             </div>
             <a href="{% url 'envoyer_message' %}" class="btn-new">
@@ -340,7 +50,6 @@
             </a>
         </div>
 
-        <!-- SUCCESS MESSAGE -->
         {% if messages %}
             {% for message in messages %}
             <div class="success-message">
@@ -350,29 +59,23 @@
             {% endfor %}
         {% endif %}
 
-        <!-- CONVERSATIONS -->
         <div class="conversations-card">
             <div class="section-title">
-                <h3>
-                    <i class="fas fa-comments"></i>
-                    Conversations
-                </h3>
+                <h3><i class="fas fa-comments"></i> Conversations</h3>
             </div>
 
             {% if conversations %}
-                {% for user in conversations %}
+                {% for conv in conversations %}
                 <div class="conv-item">
                     <div class="conv-info">
-                        <div class="conv-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
+                        <div class="conv-avatar"><i class="fas fa-user-circle"></i>{% if conv.unread %}<span class="unread-dot"></span>{% endif %}</div>
                         <div class="conv-details">
-                            <div class="conv-name">{{ user.prenom }} {{ user.nom }}</div>
-                            <div class="conv-email">{{ user.email }}</div>
+                            <div class="conv-name">{{ conv.user.prenom }} {{ conv.user.nom }}</div>
+                            <div class="conv-email">{{ conv.user.email }}</div>
                         </div>
                     </div>
-                    <a href="{% url 'conversation' user.id %}" class="conv-link">
-                        <i class="fas fa-arrow-right"></i> Voir conversation
+                    <a href="{% url 'conversation' conv.user.id %}" class="conv-link">
+                        Voir conversation <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
                 {% endfor %}
@@ -386,12 +89,6 @@
                 </div>
             {% endif %}
         </div>
-
-        <!-- BACK LINK -->
-        <a href="{% url 'dashboard' %}" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour au dashboard
-        </a>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

@@ -76,6 +76,7 @@
             font-size: 14px;
             font-weight: 500;
             transition: all 0.2s;
+            position: relative;
         }
 
         .nav-item i {
@@ -96,6 +97,21 @@
 
         .nav-item.active i {
             color: #FFFFFF;
+        }
+
+        .nav-item .nav-badge {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            background: #DC2626;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1.2;
+            min-width: 18px;
+            text-align: center;
         }
 
         /* Profil & Déconnexion */
@@ -452,14 +468,14 @@
                 <a href="/mes-documents/" class="nav-item">
                  <i class="fas fa-folder-open"></i> Mes documents
                 </a> 
-                <a href="/messages/" class="nav-item"><i class="fas fa-comments"></i> Messages</a>
-                <a href="/notifications/" class="nav-item"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="/messages/" class="nav-item"><i class="fas fa-comments"></i> Messages{% if unread_messages %} <span class="nav-badge">{{ unread_messages }}</span>{% endif %}</a>
+                <a href="/notifications/" class="nav-item"><i class="fas fa-bell"></i> Notifications{% if unread_notifications %} <span class="nav-badge">{{ unread_notifications }}</span>{% endif %}</a>
             {% else %}
                 <a href="/mes-offres/" class="nav-item active"><i class="fas fa-briefcase"></i> Mes offres</a>
                 <a href="/candidatures-recues/" class="nav-item"><i class="fas fa-users"></i> Candidatures reçues</a>
                 <a href="/entretiens/" class="nav-item"><i class="fas fa-calendar-alt"></i> Entretiens</a>
-                <a href="/messages/" class="nav-item"><i class="fas fa-comments"></i> Messages</a>
-                <a href="/notifications/" class="nav-item"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="/messages/" class="nav-item"><i class="fas fa-comments"></i> Messages{% if unread_messages %} <span class="nav-badge">{{ unread_messages }}</span>{% endif %}</a>
+                <a href="/notifications/" class="nav-item"><i class="fas fa-bell"></i> Notifications{% if unread_notifications %} <span class="nav-badge">{{ unread_notifications }}</span>{% endif %}</a>
                 <a href="/creer-offre/" class="nav-item"><i class="fas fa-plus-circle"></i> Publier une offre</a>
             {% endif %}
         </div>

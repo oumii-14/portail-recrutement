@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard – OBMI Recrutement</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231E3A5F'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='white'%3EO%3C/text%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -447,8 +448,7 @@
             <span class="blue">OBMI</span><span class="light">Recrutement</span>
         </div>
         <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/admin/">Administration</a>
+           <a href="/admin/">Administration</a>
             <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
         </div>
     </div>
@@ -501,14 +501,32 @@
 
         <!-- RÉPARTITION DES CANDIDATURES (texte) -->
         <div class="card">
-            <h2><i class="fas fa-chart-pie"></i> Répartition des candidatures</h2>
-            <div class="repartition-grid">
-                <div class="repartition-item"><span class="status-badge status-en_attente">⏳ En attente</span><div><strong>{{ candidatures_attente|default:"0" }}</strong></div></div>
-                <div class="repartition-item"><span class="status-badge status-acceptee">✅ Acceptées</span><div><strong>{{ candidatures_acceptees|default:"0" }}</strong></div></div>
-                <div class="repartition-item"><span class="status-badge status-rejetee">❌ Refusées</span><div><strong>{{ candidatures_refusees|default:"0" }}</strong></div></div>
-                <div class="repartition-item"><span class="status-badge status-entretien">📅 Entretien</span><div><strong>{{ candidatures_entretien|default:"0" }}</strong></div></div>
-            </div>
-        </div>
+    <h2><i class="fas fa-history"></i> Historique des statuts</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidature</th>
+                    <th>Ancien statut</th>
+                    <th>Nouveau statut</th>
+                    <th>Date</th>
+                    <th>Modifié par</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in historique_statuts %}
+                <tr>
+                    <td>{{ h.candidature.candidat.utilisateur.nom }} - {{ h.candidature.offre.titre }}</td>
+                    <td>{{ h.ancien_statut.nom|default:"-" }}</td>
+                    <td>{{ h.nouveau_statut.nom }}</td>
+                    <td>{{ h.date_changement|date:"d/m/Y H:i" }}</td>
+                    <td>{{ h.modifie_par.email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
         <!-- DEUX COLONNES -->
         <div class="two-columns">

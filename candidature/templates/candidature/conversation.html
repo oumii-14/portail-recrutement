@@ -1,351 +1,60 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversation – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F5F7;
-            color: #1A1A1A;
-        }
-
-        /* HEADER */
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #EAEAEA;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .logo .blue {
-            background: linear-gradient(135deg, #0A2540, #1E3A5F);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #1E3A5F;
-        }
-
-        .logo .light {
-            color: #5F6F82;
-            font-weight: 500;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4A4A4A;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1E3A5F;
-        }
-
-        .nav-links .btn-logout {
-            background: #FEF2F2;
-            border: 1px solid #FEE2E2;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #DC2626;
-        }
-
-        .nav-links .btn-logout:hover {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 32px 40px;
-        }
-
-        /* CONVERSATION CARD */
-        .conversation-card {
-            background: #FFFFFF;
-            border-radius: 24px;
-            border: 1px solid #EAEAEA;
-            overflow: hidden;
-        }
-
-        /* HEADER CONVERSATION */
-        .conv-header {
-            padding: 24px;
-            background: #FAFAFA;
-            border-bottom: 1px solid #EAEAEA;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .conv-avatar {
-            width: 56px;
-            height: 56px;
-            background: #EFF6FF;
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .conv-avatar i {
-            font-size: 28px;
-            color: #1E3A5F;
-        }
-
-        .conv-info h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111111;
-            margin-bottom: 4px;
-        }
-
-        .conv-info p {
-            font-size: 13px;
-            color: #888888;
-        }
-
-        /* MESSAGES AREA */
-        .messages-area {
-            padding: 24px;
-            max-height: 500px;
-            overflow-y: auto;
-            background: #FFFFFF;
-        }
-
-        .message {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message.moi {
-            align-items: flex-end;
-        }
-
-        .message.autre {
-            align-items: flex-start;
-        }
-
-        .message-bubble {
-            max-width: 70%;
-            padding: 12px 18px;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .message.moi .message-bubble {
-            background: #1E3A5F;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.autre .message-bubble {
-            background: #F3F4F6;
-            color: #1A1A1A;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message-name {
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .message.moi .message-name {
-            text-align: right;
-            color: #1E3A5F;
-        }
-
-        .message.autre .message-name {
-            color: #666666;
-        }
-
-        .message-content {
-            font-size: 14px;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-
-        .message-date {
-            font-size: 10px;
-            margin-top: 6px;
-            opacity: 0.6;
-        }
-
-        .message.moi .message-date {
-            text-align: right;
-        }
-
-        /* EMPTY MESSAGES */
-        .empty-messages {
-            text-align: center;
-            padding: 60px;
-            color: #888888;
-        }
-
-        .empty-messages i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: #CCCCCC;
-        }
-
-        /* REPLY FORM */
-        .reply-form {
-            padding: 24px;
-            border-top: 1px solid #EAEAEA;
-            background: #FAFAFA;
-        }
-
-        .reply-form textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #EAEAEA;
-            border-radius: 16px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            resize: vertical;
-            transition: 0.2s;
-        }
-
-        .reply-form textarea:focus {
-            outline: none;
-            border-color: #1E3A5F;
-            box-shadow: 0 0 0 3px rgba(30,58,95,0.1);
-        }
-
-        .reply-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 16px;
-        }
-
-        .btn-send {
-            background: #1E3A5F;
-            color: white;
-            border: none;
-            padding: 10px 28px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-send:hover {
-            background: #0A2540;
-            transform: translateY(-1px);
-        }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #1E3A5F;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-            margin-top: 24px;
-        }
-
-        .back-link:hover {
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .container {
-                padding: 24px 20px;
-            }
-            .message-bubble {
-                max-width: 85%;
-            }
-            .conv-header {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <span class="blue">OBMI</span><span class="light">Recrutement</span>
-        </div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
-        </div>
-    </div>
-
-    <div class="container">
+{% extends 'candidature/base.html' %}
+{% block title %}Conversation – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.container-narrow { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+.conversation-card { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+.conv-header { padding: 24px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+.conv-avatar { width: 56px; height: 56px; background: var(--light-blue); border-radius: 60px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.conv-avatar i { font-size: 28px; color: var(--primary); }
+.conv-info h2 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.conv-info p { font-size: 13px; color: var(--text-muted); }
+.messages-area { padding: 24px; max-height: 500px; overflow-y: auto; }
+.message { margin-bottom: 20px; display: flex; flex-direction: column; }
+.message.moi { align-items: flex-end; }
+.message.autre { align-items: flex-start; }
+.message-bubble { max-width: 70%; padding: 12px 18px; border-radius: 20px; position: relative; }
+.message.moi .message-bubble { background: var(--primary); color: white; border-bottom-right-radius: 4px; }
+.message.autre .message-bubble { background: #F3F4F6; color: var(--text); border-bottom-left-radius: 4px; }
+.message-name { font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; }
+.message.moi .message-name { text-align: right; color: rgba(255,255,255,0.7); }
+.message.autre .message-name { color: var(--text-muted); }
+.message-content { font-size: 14px; line-height: 1.5; word-wrap: break-word; }
+.message-date { font-size: 10px; margin-top: 6px; opacity: 0.6; }
+.message.moi .message-date { text-align: right; }
+.empty-messages { text-align: center; padding: 60px; color: var(--text-muted); }
+.empty-messages i { font-size: 48px; margin-bottom: 16px; color: var(--text-muted); }
+.reply-form { padding: 24px; border-top: 1px solid var(--border); background: var(--bg); }
+.reply-form textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 16px; font-size: 14px; font-family: inherit; resize: vertical; outline: none; transition: 0.2s; }
+.reply-form textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--light-blue); }
+.reply-actions { display: flex; justify-content: flex-end; margin-top: 16px; }
+.btn-send { background: var(--primary); color: white; border: none; padding: 10px 28px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-send:hover { background: var(--navy); transform: translateY(-1px); }
+@media (max-width: 768px) {
+    .message-bubble { max-width: 85%; }
+    .conv-header { flex-direction: column; text-align: center; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-narrow">
         <div class="conversation-card">
-            <!-- EN-TÊTE CONVERSATION -->
             <div class="conv-header">
-                <div class="conv-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
+                <div class="conv-avatar"><i class="fas fa-user-circle"></i></div>
                 <div class="conv-info">
                     <h2>{{ autre.prenom }} {{ autre.nom }}</h2>
                     <p><i class="fas fa-envelope"></i> {{ autre.email }}</p>
                 </div>
             </div>
 
-            <!-- ZONE DES MESSAGES -->
             <div class="messages-area" id="messagesArea">
                 {% if messages %}
                     {% for msg in messages %}
                         <div class="message {% if msg.expediteur == user %}moi{% else %}autre{% endif %}">
                             <div class="message-bubble">
                                 <span class="message-name">
-                                    {% if msg.expediteur == user %}
-                                        Moi
-                                    {% else %}
-                                        {{ autre.prenom }}
-                                    {% endif %}
+                                    {% if msg.expediteur == user %}Moi{% else %}{{ autre.prenom }}{% endif %}
                                 </span>
                                 <div class="message-content">{{ msg.contenu }}</div>
                                 <div class="message-date">{{ msg.dateEnvoi|date:"d/m/Y à H:i" }}</div>
@@ -361,7 +70,6 @@
                 {% endif %}
             </div>
 
-            <!-- FORMULAIRE DE RÉPONSE -->
             <div class="reply-form">
                 <form method="post" action="{% url 'envoyer_message' %}">
                     {% csrf_token %}
@@ -375,20 +83,10 @@
                 </form>
             </div>
         </div>
-
-        <!-- BACK LINK -->
-        <a href="{% url 'messages_liste' %}" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour aux messages
-        </a>
     </div>
-
-    <script>
-        // Auto-scroll en bas des messages
-        const messagesArea = document.getElementById('messagesArea');
-        if (messagesArea) {
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-        }
-    </script>
-
-</body>
-</html>
+</div>
+<script>
+    const messagesArea = document.getElementById('messagesArea');
+    if (messagesArea) messagesArea.scrollTop = messagesArea.scrollHeight;
+</script>
+{% endblock %}

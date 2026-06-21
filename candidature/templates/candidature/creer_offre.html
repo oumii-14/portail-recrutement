@@ -1,294 +1,75 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer une offre – OBMI Recrutement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F5F5F7;
-            color: #1A1A1A;
-        }
-
-        /* HEADER */
-        .header {
-            background: #FFFFFF;
-            border-bottom: 1px solid #EAEAEA;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .logo .blue {
-            background: linear-gradient(135deg, #0A2540, #1E3A5F);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: #1E3A5F;
-        }
-
-        .logo .light {
-            color: #5F6F82;
-            font-weight: 500;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4A4A4A;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #1E3A5F;
-        }
-
-        .nav-links .btn-logout {
-            background: #FEF2F2;
-            border: 1px solid #FEE2E2;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #DC2626;
-        }
-
-        .nav-links .btn-logout:hover {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        /* CONTAINER */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 32px 40px;
-        }
-
-        /* FORM CARD */
-        .form-card {
-            background: #FFFFFF;
-            border-radius: 24px;
-            border: 1px solid #EAEAEA;
-            padding: 32px;
-            margin-bottom: 24px;
-        }
-
-        .form-header {
-            margin-bottom: 28px;
-            text-align: center;
-        }
-
-        .form-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111111;
-            margin-bottom: 8px;
-        }
-
-        .form-header p {
-            color: #666666;
-            font-size: 14px;
-        }
-
-        /* FORM GROUP */
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #333333;
-        }
-
-        label i {
-            margin-right: 8px;
-            color: #1E3A5F;
-            width: 20px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #EAEAEA;
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            transition: 0.2s;
-            background: #FFFFFF;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #1E3A5F;
-            box-shadow: 0 0 0 3px rgba(30,58,95,0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        /* HELP TEXT */
-        .help-text {
-            font-size: 12px;
-            color: #888888;
-            margin-top: 6px;
-        }
-
-        /* BUTTONS */
-        .btn-submit {
-            background: #1E3A5F;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-submit:hover {
-            background: #0A2540;
-            transform: translateY(-1px);
-        }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #1E3A5F;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .back-link:hover {
-            gap: 12px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .header {
-                padding: 16px 20px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .container {
-                padding: 24px 20px;
-            }
-            .form-card {
-                padding: 24px;
-            }
-            .form-header h1 {
-                font-size: 24px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo">
-            <span class="blue">OBMI</span><span class="light">Recrutement</span>
-        </div>
-        <div class="nav-links">
-            <a href="/">Accueil</a>
-            <a href="/dashboard/">Dashboard</a>
-            <a href="/deconnexion/" class="btn-logout">🚪 Déconnexion</a>
-        </div>
-    </div>
-
-    <div class="container">
+{% extends 'candidature/base.html' %}
+{% block title %}Créer une offre – OBMI Recrutement{% endblock %}
+{% block extra_head %}
+<style>
+.container-narrow { max-width: 700px; margin: 0 auto; padding: 32px 24px; }
+.form-card { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+.form-header { background: linear-gradient(135deg, var(--primary) 0%, var(--navy) 100%); padding: 24px 28px; color: white; }
+.form-header h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.form-header p { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+.form-body { padding: 28px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-actions { display: flex; gap: 16px; margin-top: 28px; }
+.btn-submit { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-submit:hover { background: var(--navy); transform: translateY(-1px); }
+.btn-cancel { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); padding: 12px 28px; border-radius: 40px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+.btn-cancel:hover { background: #FEE2E2; color: #DC2626; }
+@media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr; }
+    .form-body { padding: 20px; }
+    .form-actions { flex-direction: column; }
+    .btn-submit, .btn-cancel { justify-content: center; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-narrow">
         <div class="form-card">
             <div class="form-header">
-                <h1> Publier une offre d'emploi</h1>
-                <p>Créez une nouvelle annonce pour attirer les meilleurs talents</p>
+                <h1><i class="fas fa-briefcase"></i> Créer une offre</h1>
+                <p>Publiez une nouvelle annonce</p>
             </div>
-
-            <form method="post">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label><i class="fas fa-briefcase"></i> Titre du poste</label>
-                    <input type="text" name="titre" placeholder="Ex: Développeur Django Senior" required>
-                    <div class="help-text">Titre clair et précis pour attirer les bons candidats</div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Description</label>
-                    <textarea name="description" rows="6" placeholder="Description du poste, missions, profil recherché, compétences requises..." required></textarea>
-                    <div class="help-text">Décrivez le poste, les responsabilités et le profil idéal</div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-map-marker-alt"></i> Lieu</label>
-                    <input type="text" name="lieu" placeholder="Ex: Paris, Rabat, Casablanca, Full remote..." required>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-tag"></i> Type de contrat</label>
-                    <select name="type_contrat" required>
-                        <option value="CDI">CDI - Contrat à Durée Indéterminée</option>
-                        <option value="CDD">CDD - Contrat à Durée Déterminée</option>
-                        <option value="Stage">Stage</option>
-                        <option value="Alternance">Alternance</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-alt"></i> Date d'expiration (optionnel)</label>
-                    <input type="date" name="date_expiration">
-                    <div class="help-text">Laissez vide si pas de date limite</div>
-                </div>
-
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-check-circle"></i> Publier l'offre
-                </button>
-            </form>
+            <div class="form-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Titre du poste</label>
+                            <input type="text" name="titre" placeholder="ex: Développeur React" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Type de contrat</label>
+                            <select name="type_contrat" required>
+                                <option value="CDI">CDI</option>
+                                <option value="CDD">CDD</option>
+                                <option value="Stage">Stage</option>
+                                <option value="Alternance">Alternance</option>
+                                <option value="Freelance">Freelance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Lieu</label>
+                            <input type="text" name="lieu" placeholder="ex: Paris" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date d'expiration</label>
+                            <input type="date" name="date_expiration" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="8" placeholder="Décrivez le poste, les missions, le profil recherché..." required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit"><i class="fas fa-check"></i> Publier l'offre</button>
+                        <a href="{% url 'mes_offres' %}" class="btn-cancel"><i class="fas fa-times"></i> Annuler</a>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <!-- BACK LINK -->
-        <a href="/dashboard/" class="back-link">
-            <i class="fas fa-arrow-left"></i> Retour au dashboard
-        </a>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}
